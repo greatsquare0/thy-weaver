@@ -1,4 +1,6 @@
 {
+  // exclude compiled output from code lookup
+  "exclude": ["dist"],
   "compilerOptions": {
     // Enable latest features
     "lib": [
