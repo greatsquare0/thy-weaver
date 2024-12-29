@@ -1,6 +1,6 @@
-@use '~tailwindcss/base';
-@use '~tailwindcss/components';
-@use '~tailwindcss/utilities';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 body {
   font-family: 'Inter', sans-serif;

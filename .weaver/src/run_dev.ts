@@ -7,10 +7,10 @@ import {
   handleTweegoSetup,
   moveFiles,
   runRollup,
-} from './build_commands.ts'
-import { loadConfig } from './handle_config.ts'
-import { updateState } from './dev_state.ts'
-import { url, ws } from './dev_server.ts'
+} from './build_commands.js'
+import { loadConfig } from './handle_config.js'
+import { updateState } from './dev_state.js'
+import { url, ws } from './dev_server.js'
 
 const mode = process.env.NODE_ENV || 'development'
 const config = await loadConfig()
@@ -37,7 +37,7 @@ const runTweego = async () => {
         styles: `${distPath}/${config.builder!.dist!.styles.output_dir}`,
         scripts: `${distPath}/${config.builder!.dist!.scripts.output_dir}`,
         useTwineTestMode: config.dev_server!.twine_debug,
-        modules: ['./dist/fonts/'],
+        modules: ['../dist/fonts/'],
       },
       output: {
         mode: 'string',
@@ -56,6 +56,7 @@ const runTweego = async () => {
 }
 
 const build = async (): Promise<string> => {
+  console.log(process.cwd())
   const duration = Date.now()
   await runRollup()
   await moveFiles()
@@ -73,7 +74,7 @@ const build = async (): Promise<string> => {
 
 build().then(async firstResult => {
   updateState(firstResult)
-  const { server } = await import('./dev_server.ts')
+  const { server } = await import('./dev_server.js')
 
   console.log(pico.yellow(pico.bold('Waiting for file changes...')))
   console.log(

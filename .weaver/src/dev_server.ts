@@ -6,9 +6,9 @@ import { transformFile as swcTransform } from '@swc/core'
 import type { WSContext } from 'hono/ws'
 import pico from 'picocolors'
 
-import { devState } from './dev_state.ts'
-import { loadConfig } from './handle_config.ts'
-import swcConfig from './swc_config.ts'
+import { devState } from './dev_state.js'
+import { loadConfig } from './handle_config.js'
+import swcConfig from './swc_config.js'
 
 const config = await loadConfig()
 
@@ -78,7 +78,7 @@ app.get(
 )
 
 app.get('/dev', async ctx => {
-  const output = await swcTransform('./.build/reload_agent.ts', {
+  const output = await swcTransform('./src/reload_agent.ts', {
     ...swcConfig,
   })
   return new Response(output.code, {
@@ -121,7 +121,7 @@ try {
   })
 
   injectWebSocket(server)
-} catch (error) {
+} catch (error: any) {
   throwServerError(error)
 }
 

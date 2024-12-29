@@ -126,8 +126,8 @@ export const loadConfig = async (
     configPath = resolve(cwd(), customPath)
     console.log(configPath)
   } else {
-    const tsPath = resolve(cwd(), 'thyweaver.config.js')
-    const jsPath = resolve(cwd(), 'thyweaver.config.ts')
+    const tsPath = resolve(cwd(), '..', 'thyweaver.config.js')
+    const jsPath = resolve(cwd(), '..', 'thyweaver.config.ts')
 
     if (existsSync(jsPath)) {
       configPath = jsPath
@@ -155,7 +155,7 @@ export const defaultConfig: Partial<ThyWeaverConfig> = {
     watcherDelay: 1000,
     compilation_target: 'defaults',
     prebuilding: {
-      project_root: './src',
+      project_root: '../src',
       prebuilding_dir: './.prebuilt',
       app: {
         input_file: 'assets/app/index.ts',
@@ -179,10 +179,10 @@ export const defaultConfig: Partial<ThyWeaverConfig> = {
       },
     },
     dist: {
-      output_dir: './dist',
+      output_dir: '../dist',
       story: {
-        input_dir: './src/story/',
-        html_head: './src/head_content.html',
+        input_dir: '../src/story/',
+        html_head: '../src/head_content.html',
         output_file: 'index.html',
       },
       scripts: {

@@ -1,4 +1,4 @@
-import { outputFile, PathLike } from 'fs-extra/esm'
+import { outputFile, type PathLike } from 'fs-extra/esm'
 import { readFile, stat } from 'node:fs/promises'
 import process from 'node:process'
 
