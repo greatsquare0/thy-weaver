@@ -13,7 +13,7 @@
     "*.tsx": "${capture}.ts",
     "*.css": "${capture}.css.map",
     "tsconfig.json": "tsconfig.*.json",
-    "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, bun.lockb, TEMPLATE_LICENSE, .node-version, pnpm-workspace.yaml, LICENSE"
+    "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, bun.lockb, TEMPLATE_LICENSE, .node-version, pnpm-workspace.yaml, LICENSE, .npmrc"
   },
   "twee3LanguageTools.storyformat.current": "sugarcube-2",
   "files.associations": {
