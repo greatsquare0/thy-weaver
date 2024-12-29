@@ -8,12 +8,15 @@ import {
   moveFiles,
   runRollup,
 } from './build_commands.js'
+import { runZipper } from './run_zipper.js'
 
 const mode = process.env.NODE_ENV || 'development'
 const config = await loadConfig()
 
 console.log(
-  `\n${pico.bgMagenta(pico.bold(' ThyWeaver - Running in prod mode '))}\n`
+  pico.bgMagenta(pico.bold(' ThyWeaver Builder ')),
+  pico.green(pico.bold(' Running in build to dist mode ')),
+  '\n'
 )
 
 await handleTweegoSetup()
@@ -36,6 +39,7 @@ const runTweego = async () => {
         htmlHead: config.builder!.dist!.story.html_head,
         styles: `${distPath}/${config.builder!.dist!.styles.output_dir}`,
         scripts: `${distPath}/${config.builder!.dist!.scripts.output_dir}`,
+        modules: ['../dist/fonts/'],
       },
       output: {
         mode: 'file',
@@ -52,7 +56,7 @@ const runTweego = async () => {
   }
 }
 
-const build = async (): Promise<string> => {
+const build = async (): Promise<null> => {
   const duration = Date.now()
   await runRollup()
   await moveFiles()
@@ -64,10 +68,12 @@ const build = async (): Promise<string> => {
         pico.bold(` Build finished in ${Date.now() - duration}ms `)
       )}ㅤ\n`
     )
-    return resolve
+    resolve(null)
   })
 }
 
-build().then(() => {
-  process.exit()
-})
+await build()
+
+if (process.env.BUILD_TYPE === 'zip') {
+  await runZipper()
+}

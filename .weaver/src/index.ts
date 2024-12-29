@@ -33,6 +33,11 @@ program
   .description('Build and output to dist')
   .option('-d, --withDevelopment', 'Build in development mode', false)
   .option('-b, --useBun', 'Use Bun instead of Node', false)
+  .option(
+    '-z, --zip',
+    'Pack the game in to a .zip (By default the name of the zip will be the package name and version on package.json)',
+    false
+  )
   .action(async options => {
     spawnBuilder('build', options)
 
@@ -56,8 +61,22 @@ const spawnBuilder = (mode: 'dev' | 'build', cliOptions: any) => {
     {
       stdio: 'inherit',
       cwd: './.weaver/',
+      env: {
+        //NODE_ENV: cliOptions.withProduction ? 'production' : 'development',
+        BUILD_TYPE: cliOptions.zip ? 'zip' : undefined,
+      },
     }
   )
+
+  return new Promise(resolve => {
+    process.on('exit', () => {
+      if (!process.killed) {
+        process.kill()
+      }
+
+      resolve
+    })
+  })
 }
 
 program.parse()

@@ -32,7 +32,7 @@ export const handleTweegoSetup = async () => {
 export const runRollup = async () => {
   const spinner = getSpinner()
   spinner.start('Running Rollup...')
-
+  await remove(config.builder!.prebuilding!.prebuilding_dir)
   const rl = await rollup(rollupConfig)
 
   await rl.write({
@@ -93,7 +93,7 @@ export const moveFiles = async () => {
     spinner.succeed(
       `Font files moved in ${pico.yellow(`${Date.now() - duration}ms`)}`
     )
-  } catch (error) {
+  } catch (error: any) {
     if (error.code !== 'ENOENT') {
       spinner.fail(
         ` ${pico.bgRed(

@@ -44,6 +44,9 @@ importers:
       '@swc/core':
         specifier: ^1.9.1
         version: 1.9.1
+      '@types/adm-zip':
+        specifier: ^0.5.7
+        version: 0.5.7
       '@types/fs-extra':
         specifier: ^11.0.4
         version: 11.0.4
@@ -53,6 +56,9 @@ importers:
       '@types/twine-sugarcube':
         specifier: ^2.37.1
         version: 2.37.1
+      adm-zip:
+        specifier: ^0.5.16
+        version: 0.5.16
       browserslist:
         specifier: ^4.24.2
         version: 4.24.2
@@ -692,6 +698,9 @@ packages:
   '@trysound/sax@0.2.0':
     resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==}
     engines: {node: '>=10.13.0'}
+
+  '@types/adm-zip@0.5.7':
+    resolution: {integrity: sha512-DNEs/QvmyRLurdQPChqq0Md4zGvPwHerAJYWk9l2jCbD1VPpnzRJorOdiq4zsw09NFbYnhfsoEhWtxIzXpn2yw==}
 
   '@types/estree@1.0.6':
     resolution: {integrity: sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==}
@@ -2259,6 +2268,10 @@ snapshots:
       '@swc/counter': 0.1.3
 
   '@trysound/sax@0.2.0': {}
+
+  '@types/adm-zip@0.5.7':
+    dependencies:
+      '@types/node': 22.10.2
 
   '@types/estree@1.0.6': {}
 

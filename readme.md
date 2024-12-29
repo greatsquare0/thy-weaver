@@ -48,6 +48,7 @@ You can consider this a "spiritual successor" (Event though, as far as I know, N
 - Directory for custom fonts
 - Directory for third-party scripts
 - Modern workflow
+- Easily pack your game in to a .zip with `pnpm weaver build --zip`
 
 ## Tech Stack
 
@@ -62,7 +63,7 @@ You can consider this a "spiritual successor" (Event though, as far as I know, N
 ## Requirements
 
 - [Bun](https://bun.sh) or [Node 22](https://nodejs.org)
-- [pnpm](https://pnpm.io) (NPM probably works, but is untested, same for Bun package manager)
+- [pnpm](https://pnpm.io) (Is now obligatory, as pnpm workspaces are used)
 
 > For using with Node, highly recommend using [Fast Node Manager (fnm)](https://github.com/Schniz/fnm)
 
@@ -94,7 +95,7 @@ Then place your new IFID on `:: StoryData` passage under [`./src/story/StoryData
 4. Start developing
 
 ```bash
-pnpm run dev 
+pnpm weaver dev 
 ```
 > For node, prefix the command with `node:` (example: `pnpm run node:dev`)
 
@@ -103,16 +104,28 @@ If you are new to it, check out [Nijikokun SugarCube Basics](https://github.com/
 
 ### Commands
 
-| Command                  | What it does                                                                                      |
-|--------------------------|---------------------------------------------------------------------------------------------------|
-| `pnpm run dev`           | Starts development server and watches `src/` directory                                            |
-| `pnpm run dev:withProd`  | Starts development server and watches `src/` directory in production mode (`NODE_ENV=production`) |
-| `pnpm run build`         | Compiles and bundles the story in the `dist/` directory                                           |
-| `pnpm run build:withDev` | Compiles and bundles the story in the `dist/` directory without production mode                   |
+Use the included CLI
 
-> The same commands prefixed with `node:` have been added for Node 22 support (example: `pnpm run node:dev`)
+```
+Usage: weaver [options] [command]
+
+A CLI for ThyWeaver projects
+
+Options:
+  -V, --version    output the version number
+  -h, --help       display help for command
+
+Commands:
+  dev [options]    Build, watch files for changes and starts a dev server
+  build [options]  Build and output to dist
+  help [command]   display help for command
+
+```
+
+> Now, by default, node is used to run all commands, bun can be used passing `-b` or `-useBun`
 
 ### Directory Structure
+> This file structure has changed, will update this later
 
 ```toml
 thy-weaver
@@ -143,7 +156,7 @@ Check out the docs, [available here](https://github.com/greatsquare0/thy-weaver/
 
 - [x] ~~Add Node 22 support~~
 - [ ] Add Deno support 
-- [ ] Add support for packaging `dist` directory.
+- [x] ~~Add support for packaging `dist` directory.~~
 - [ ] Add support for compiling to Electron or Tauri application.
 
 Want to suggest a feature? [Create a Github issue with your suggestion](https://github.com/greatsquare0/thy-weaver/issues/new/choose)

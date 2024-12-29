@@ -14,8 +14,11 @@ import { url, ws } from './dev_server.js'
 
 const mode = process.env.NODE_ENV || 'development'
 const config = await loadConfig()
+
 console.log(
-  `\n${pico.bgMagenta(pico.bold(' ThyWeaver - Running in dev mode '))}ㅤ\n`
+  pico.bgMagenta(pico.bold(' ThyWeaver Builder ')),
+  pico.green(pico.bold(' Running in dev mode ')),
+  '\n'
 )
 
 await handleTweegoSetup()

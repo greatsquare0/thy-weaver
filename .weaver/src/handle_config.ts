@@ -41,6 +41,9 @@ interface BuilderOptions {
    */
   compilation_target: string
   additionalAssets?: AdditionalAsset[]
+  package?: {
+    zip_custom_name: string
+  }
   prebuilding?: {
     project_root: string
     /**
