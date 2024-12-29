@@ -16,6 +16,7 @@ const config = await loadConfig()
 console.log(
   pico.bgMagenta(pico.bold(' ThyWeaver Builder ')),
   pico.green(pico.bold(' Running in build to dist mode ')),
+  pico.gray(`[env: ${mode}]`),
   '\n'
 )
 

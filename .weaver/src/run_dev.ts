@@ -17,7 +17,8 @@ const config = await loadConfig()
 
 console.log(
   pico.bgMagenta(pico.bold(' ThyWeaver Builder ')),
-  pico.green(pico.bold(' Running in dev mode ')),
+  pico.green(pico.bold(' Running in live mode ')),
+  pico.gray(`[env: ${mode}]`),
   '\n'
 )
 

@@ -14,7 +14,7 @@ program
 program
   .command('dev')
   .description('Build, watch files for changes and starts a dev server')
-  .option('-p, --withProduction', 'Run the server in production mode', false)
+  .option('-p, --useProduction', 'Run the server in production mode', false)
   .option('-b, --useBun', 'Use Bun instead of Node', false)
   .action(async options => {
     spawnBuilder('dev', options)
@@ -31,7 +31,7 @@ program
 program
   .command('build')
   .description('Build and output to dist')
-  .option('-d, --withDevelopment', 'Build in development mode', false)
+  .option('-d, --useDevelopment', 'Build in development mode', false)
   .option('-b, --useBun', 'Use Bun instead of Node', false)
   .option(
     '-z, --zip',
@@ -50,19 +50,34 @@ program
     })
   })
 
-const spawnBuilder = (mode: 'dev' | 'build', cliOptions: any) => {
+interface CliOptions {
+  useBun?: boolean
+  useProduction?: boolean
+  useDevelopment?: boolean
+  zip?: boolean
+}
+
+const spawnBuilder = (mode: 'dev' | 'build', cliOptions: CliOptions) => {
+  const env = () => {
+    if (mode === 'build') {
+      return cliOptions.useDevelopment ? 'development' : 'production'
+    } else {
+      cliOptions.useProduction ? 'production' : 'development'
+    }
+  }
+
   const process = spawn(
     'pnpm',
     [
       `${!cliOptions.useBun ? 'node:' : ''}${mode}${
-        cliOptions.withProduction ? ':withDev' : ''
+        cliOptions.useProduction ? ':withDev' : ''
       }`,
     ],
     {
       stdio: 'inherit',
       cwd: './.weaver/',
       env: {
-        //NODE_ENV: cliOptions.withProduction ? 'production' : 'development',
+        NODE_ENV: env(),
         BUILD_TYPE: cliOptions.zip ? 'zip' : undefined,
       },
     }
