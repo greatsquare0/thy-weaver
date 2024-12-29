@@ -5,7 +5,8 @@
   "template-version": "0.3.1-beta",
   "description": "A starter template for a modern Twine development workflow",
   "scripts": {
-    "weaver": "pnpm ./.weaver/"
+    "weaver": "node --experimental-strip-types --no-warnings ./.weaver",
+    "bun:weaver": "bun ./.weaver"
   },
   "template-author": "greatsquare0",
   "license": "MIT",

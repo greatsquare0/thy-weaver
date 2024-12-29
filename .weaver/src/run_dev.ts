@@ -56,7 +56,6 @@ const runTweego = async () => {
 }
 
 const build = async (): Promise<string> => {
-  console.log(process.cwd())
   const duration = Date.now()
   await runRollup()
   await moveFiles()
