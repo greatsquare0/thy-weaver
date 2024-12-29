@@ -2,7 +2,7 @@
   "name": "thy-weaver",
   "type": "module",
   "version": "0.0.0",
-  "template-version": "0.3.1-beta",
+  "template-version": "0.4.0-beta",
   "description": "A starter template for a modern Twine development workflow",
   "scripts": {
     "weaver": "node --experimental-strip-types --no-warnings ./.weaver",
