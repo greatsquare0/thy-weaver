@@ -41,7 +41,7 @@ const runTweego = async () => {
         styles: `${distPath}/${config.builder!.dist!.styles.output_dir}`,
         scripts: `${distPath}/${config.builder!.dist!.scripts.output_dir}`,
         useTwineTestMode: config.dev_server!.twine_debug,
-        modules: ['../../dist/fonts/'],
+        modules: [`${distPath}/${config.builder!.dist!.fonts.output_dir}`],
       },
       output: {
         mode: 'string',

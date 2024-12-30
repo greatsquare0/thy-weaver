@@ -2,12 +2,15 @@ import { spawn } from 'node:child_process'
 import { Command } from 'commander'
 import { readJsonSync } from 'fs-extra/esm'
 
-//const pkg = readJsonSync('./.weaver/package.json')
+import { getWorkspaceRootSync } from './build_helpers.ts'
+const pkg = readJsonSync(`${getWorkspaceRootSync()!.value}/package.json`)
 
 const program = new Command()
 
-program.name('weaver').description('A CLI for ThyWeaver projects')
-//.version(pkg.version)
+program
+  .name('weaver')
+  .description('A CLI for ThyWeaver projects')
+  .version(pkg.version)
 
 program
   .command('dev')
@@ -71,6 +74,8 @@ const spawnBuilder = (mode: 'dev' | 'build', cliOptions: CliOptions) => {
       PATH: process.env.PATH,
       NODE_ENV: env(),
       BUILD_TYPE: cliOptions.zip ? 'zip' : undefined,
+      WORKSPACE_ROOT: getWorkspaceRootSync()!.value,
+      WORKSPACE_ROOT_RELATIVE: getWorkspaceRootSync()!.relative(),
     },
   })
 

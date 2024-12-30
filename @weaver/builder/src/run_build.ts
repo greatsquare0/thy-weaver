@@ -40,7 +40,7 @@ const runTweego = async () => {
         htmlHead: config.builder!.dist!.story.html_head,
         styles: `${distPath}/${config.builder!.dist!.styles.output_dir}`,
         scripts: `${distPath}/${config.builder!.dist!.scripts.output_dir}`,
-        modules: ['../../dist/fonts/'],
+        modules: [`${distPath}/${config.builder!.dist!.fonts.output_dir}`],
       },
       output: {
         mode: 'file',
