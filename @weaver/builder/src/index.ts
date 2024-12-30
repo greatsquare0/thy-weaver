@@ -2,14 +2,12 @@ import { spawn } from 'node:child_process'
 import { Command } from 'commander'
 import { readJsonSync } from 'fs-extra/esm'
 
-const pkg = readJsonSync('./.weaver/package.json')
+//const pkg = readJsonSync('./.weaver/package.json')
 
 const program = new Command()
 
-program
-  .name('weaver')
-  .description('A CLI for ThyWeaver projects')
-  .version(pkg.version)
+program.name('weaver').description('A CLI for ThyWeaver projects')
+//.version(pkg.version)
 
 program
   .command('dev')
@@ -66,23 +64,15 @@ const spawnBuilder = (mode: 'dev' | 'build', cliOptions: CliOptions) => {
     }
   }
 
-  const child = spawn(
-    'pnpm',
-    [
-      `${!cliOptions.useBun ? 'node:' : ''}${mode}${
-        cliOptions.useProduction ? ':withDev' : ''
-      }`,
-    ],
-    {
-      stdio: 'inherit',
-      cwd: './.weaver/',
-      env: {
-        PATH: process.env.PATH,
-        NODE_ENV: env(),
-        BUILD_TYPE: cliOptions.zip ? 'zip' : undefined,
-      },
-    }
-  )
+  const child = spawn('pnpm', [`${!cliOptions.useBun ? 'node:' : ''}${mode}`], {
+    stdio: 'inherit',
+    cwd: './.weaver/',
+    env: {
+      PATH: process.env.PATH,
+      NODE_ENV: env(),
+      BUILD_TYPE: cliOptions.zip ? 'zip' : undefined,
+    },
+  })
 
   return new Promise(resolve => {
     process.on('exit', () => {
