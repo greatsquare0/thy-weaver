@@ -7,10 +7,10 @@ import {
   handleTweegoSetup,
   moveFiles,
   runRollup,
-} from './build_commands.js'
-import { loadConfig } from './handle_config.js'
-import { updateState } from './dev_state.js'
-import { url, ws } from './dev_server.js'
+} from './build_commands.ts'
+import { loadConfig } from './handle_config.ts'
+import { updateState } from './dev_state.ts'
+import { url, ws } from './dev_server.ts'
 
 const mode = process.env.NODE_ENV || 'development'
 const config = await loadConfig()
@@ -77,7 +77,7 @@ const build = async (): Promise<string> => {
 
 build().then(async firstResult => {
   updateState(firstResult)
-  const { server } = await import('./dev_server.js')
+  const { server } = await import('./dev_server.ts')
 
   console.log(pico.yellow(pico.bold('Waiting for file changes...')))
   console.log(

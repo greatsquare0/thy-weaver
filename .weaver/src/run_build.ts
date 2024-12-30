@@ -1,14 +1,14 @@
 import { Tweenode } from 'tweenode'
 import pico from 'picocolors'
 
-import { loadConfig } from './handle_config.js'
+import { loadConfig } from './handle_config.ts'
 import {
   getSpinner,
   handleTweegoSetup,
   moveFiles,
   runRollup,
-} from './build_commands.js'
-import { runZipper } from './run_zipper.js'
+} from './build_commands.ts'
+import { runZipper } from './run_zipper.ts'
 
 const mode = process.env.NODE_ENV || 'development'
 const config = await loadConfig()

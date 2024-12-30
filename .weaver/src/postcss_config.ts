@@ -5,7 +5,7 @@ import tailwindcss from 'tailwindcss'
 import postcssImport from 'postcss-import'
 import { resolve } from 'node:path'
 
-import { loadConfig } from './handle_config.js'
+import { loadConfig } from './handle_config.ts'
 const config = await loadConfig()
 
 const mode = process.env.NODE_ENV || 'development'

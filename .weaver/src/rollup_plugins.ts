@@ -7,10 +7,10 @@ import { type Plugin } from 'rollup'
 import { createLink, createSymlink, outputFile, copy } from 'fs-extra/esm'
 import { statSync } from 'node:fs'
 
-import { concat, getRuntime } from './build_helpers.js'
-import swcOptions from './swc_config.js'
-import { loadConfig } from './handle_config.js'
-import postcssConfig from './postcss_config.js'
+import { concat, getRuntime } from './build_helpers.ts'
+import swcOptions from './swc_config.ts'
+import { loadConfig } from './handle_config.ts'
+import postcssConfig from './postcss_config.ts'
 
 const config = await loadConfig()
 const mode = process.env.NODE_ENV || 'development'

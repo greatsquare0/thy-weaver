@@ -4,8 +4,8 @@ import { rollup } from 'rollup'
 import pico from 'picocolors'
 import ora from 'ora'
 
-import { loadConfig } from './handle_config.js'
-import { rollupConfig } from './rollup_config.js'
+import { loadConfig } from './handle_config.ts'
+import { rollupConfig } from './rollup_config.ts'
 
 const config = await loadConfig()
 const mode = process.env.NODE_ENV || 'development'

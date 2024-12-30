@@ -6,9 +6,9 @@ import { transformFile as swcTransform } from '@swc/core'
 import type { WSContext } from 'hono/ws'
 import pico from 'picocolors'
 
-import { devState } from './dev_state.js'
-import { loadConfig } from './handle_config.js'
-import swcConfig from './swc_config.js'
+import { devState } from './dev_state.ts'
+import { loadConfig } from './handle_config.ts'
+import swcConfig from './swc_config.ts'
 
 const config = await loadConfig()
 

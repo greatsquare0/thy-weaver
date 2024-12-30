@@ -66,7 +66,7 @@ const spawnBuilder = (mode: 'dev' | 'build', cliOptions: CliOptions) => {
     }
   }
 
-  const process = spawn(
+  const child = spawn(
     'pnpm',
     [
       `${!cliOptions.useBun ? 'node:' : ''}${mode}${
@@ -77,6 +77,7 @@ const spawnBuilder = (mode: 'dev' | 'build', cliOptions: CliOptions) => {
       stdio: 'inherit',
       cwd: './.weaver/',
       env: {
+        PATH: process.env.PATH,
         NODE_ENV: env(),
         BUILD_TYPE: cliOptions.zip ? 'zip' : undefined,
       },
@@ -85,8 +86,8 @@ const spawnBuilder = (mode: 'dev' | 'build', cliOptions: CliOptions) => {
 
   return new Promise(resolve => {
     process.on('exit', () => {
-      if (!process.killed) {
-        process.kill()
+      if (!child.killed) {
+        child.kill()
       }
 
       resolve

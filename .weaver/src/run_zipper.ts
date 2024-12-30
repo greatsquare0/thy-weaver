@@ -4,7 +4,7 @@ import { outputFile, readJsonSync } from 'fs-extra/esm'
 import { resolve } from 'node:path'
 import pico from 'picocolors'
 
-import { loadConfig } from './handle_config.js'
+import { loadConfig } from './handle_config.ts'
 import { rm } from 'node:fs/promises'
 
 const pkg = readJsonSync('../package.json')

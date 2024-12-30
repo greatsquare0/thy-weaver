@@ -4,14 +4,14 @@ import swc from '@rollup/plugin-swc'
 import resolve from '@rollup/plugin-node-resolve'
 import pico from 'picocolors'
 
-import postcssConfig from './postcss_config.js'
-import swcOptions from './swc_config.js'
+import postcssConfig from './postcss_config.ts'
+import swcOptions from './swc_config.ts'
 import {
   handleVendorFiles,
   smartCopy,
   type CopyOptions,
-} from './rollup_plugins.js'
-import { loadConfig } from './handle_config.js'
+} from './rollup_plugins.ts'
+import { loadConfig } from './handle_config.ts'
 
 const mode = process.env.NODE_ENV || 'development'
 
