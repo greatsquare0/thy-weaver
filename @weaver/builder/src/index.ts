@@ -2,7 +2,8 @@ import { spawn } from 'node:child_process'
 import { Command } from 'commander'
 import { readJsonSync } from 'fs-extra/esm'
 
-const pkg = readJsonSync('./.weaver/package.json')
+import { getWorkspaceRootSync } from './build_helpers.ts'
+const pkg = readJsonSync(`${getWorkspaceRootSync()!.value}/package.json`)
 
 const program = new Command()
 
@@ -66,23 +67,17 @@ const spawnBuilder = (mode: 'dev' | 'build', cliOptions: CliOptions) => {
     }
   }
 
-  const child = spawn(
-    'pnpm',
-    [
-      `${!cliOptions.useBun ? 'node:' : ''}${mode}${
-        cliOptions.useProduction ? ':withDev' : ''
-      }`,
-    ],
-    {
-      stdio: 'inherit',
-      cwd: './.weaver/',
-      env: {
-        PATH: process.env.PATH,
-        NODE_ENV: env(),
-        BUILD_TYPE: cliOptions.zip ? 'zip' : undefined,
-      },
-    }
-  )
+  const child = spawn('pnpm', [`${!cliOptions.useBun ? 'node:' : ''}${mode}`], {
+    stdio: 'inherit',
+    cwd: './@weaver/builder',
+    env: {
+      PATH: process.env.PATH,
+      NODE_ENV: env(),
+      BUILD_TYPE: cliOptions.zip ? 'zip' : undefined,
+      WORKSPACE_ROOT: getWorkspaceRootSync()!.value,
+      WORKSPACE_ROOT_RELATIVE: getWorkspaceRootSync()!.relative(),
+    },
+  })
 
   return new Promise(resolve => {
     process.on('exit', () => {

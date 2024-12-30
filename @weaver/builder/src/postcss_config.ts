@@ -15,7 +15,9 @@ const postcssConfig = {
     postcssOptions: {
       plugins: [
         postcssImport(),
-        tailwindcss('../tailwind.config.ts'),
+        tailwindcss(
+          `${process.env.WORKSPACE_ROOT_RELATIVE}/tailwind.config.ts`
+        ),
         postcssLightningcss({
           //@ts-ignore
           browsers: config.builder!.compilation_target,

@@ -1,6 +1,11 @@
+import { findUp, findUpSync } from 'find-up'
 import { outputFile, type PathLike } from 'fs-extra/esm'
 import { readFile, stat } from 'node:fs/promises'
+import { dirname, relative } from 'node:path'
 import process from 'node:process'
+
+import type { Config } from 'tailwindcss'
+export type TailwindConfig = Config
 
 export const isFile = async (path: PathLike) => {
   return (await stat(path)).isFile()
@@ -49,4 +54,31 @@ export const getRuntime = () => {
   }
 
   return runner
+}
+
+export const getWorkspaceRoot = async () => {
+  const ref = await findUp('pnpm-workspace.yaml')
+
+  if (ref) {
+    const value = dirname(ref)
+    return {
+      value,
+      relative() {
+        return relative('./@weaver/builder/', value)
+      },
+    }
+  }
+}
+export const getWorkspaceRootSync = () => {
+  const ref = findUpSync('pnpm-workspace.yaml')
+
+  if (ref) {
+    const value = dirname(ref)
+    return {
+      value,
+      relative() {
+        return relative('./@weaver/builder/', value)
+      },
+    }
+  }
 }
