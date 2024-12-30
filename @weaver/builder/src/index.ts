@@ -66,7 +66,7 @@ const spawnBuilder = (mode: 'dev' | 'build', cliOptions: CliOptions) => {
 
   const child = spawn('pnpm', [`${!cliOptions.useBun ? 'node:' : ''}${mode}`], {
     stdio: 'inherit',
-    cwd: './.weaver/',
+    cwd: './@weaver/builder',
     env: {
       PATH: process.env.PATH,
       NODE_ENV: env(),
