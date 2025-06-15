@@ -5,9 +5,12 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
+  "bin": {
+    "weaver": "src/main.ts"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": ""
+    "weaver": "src/main.ts"
   },
   "files": [
     "dist"
@@ -30,5 +33,9 @@
     "@types/node": "^24.0.1",
     "oxlint": "^1.1.0",
     "prettier": "^3.5.3"
+  },
+  "dependencies": {
+    "@swc/core": "^1.12.1",
+    "lilconfig": "^3.1.3"
   }
 }
