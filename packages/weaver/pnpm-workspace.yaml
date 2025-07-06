@@ -1,2 +1,6 @@
 onlyBuiltDependencies:
   - '@swc/core'
+  - '@tailwindcss/oxide'
+
+overrides:
+  lib-weaver: link:C:/Users/kaio_/AppData/Local/pnpm/global/5/node_modules/lib-weaver
