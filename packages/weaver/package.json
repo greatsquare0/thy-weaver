@@ -2,19 +2,34 @@
   "name": "lib-weaver",
   "version": "0.0.1-beta",
   "description": "A toolkit to compile and bundle Twine based stories",
-  "main": "src/main.ts",
-  "types": "dist/index.d.ts",
+  "main": "dist/main.js",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*"
+      ]
+    }
+  },
   "type": "module",
   "bin": {
-    "weaver": "src/main.ts"
+    "weaver": "dist/main.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "weaver": "src/main.ts"
+    "build": "tsdown --minify",
+    "dev": "tsdown --watch",
+    "weaver": "dist/main.js"
   },
   "exports": {
-    ".": "./src/main.ts",
-    "./config": "./src/config/config_handler.ts"
+    ".": {
+      "import": "./dist/main.js",
+      "require": "./dist/main.js",
+      "types": "./dist/main.d.ts"
+    },
+    "./config": {
+      "import": "./dist/config.js",
+      "require": "./dist/config.js",
+      "types": "./dist/config.d.ts"
+    }
   },
   "files": [
     "dist"
@@ -37,15 +52,14 @@
     "@tsconfig/node22": "^22.0.2",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^24.0.10",
-    "@types/twine-sugarcube": "^2.37.2",
     "oxlint": "^1.5.0",
     "prettier": "^3.6.2",
+    "tsdown": "^0.12.9",
     "typescript": "^5.8.3"
   },
   "dependencies": {
     "@hono/node-server": "^1.15.0",
     "@hono/node-ws": "^1.2.0",
-    "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-url": "^8.0.2",
     "@swc/core": "^1.12.9",
     "browserslist": "^4.25.1",
@@ -64,7 +78,6 @@
     "postcss-loader": "^8.1.1",
     "postcss-scss": "^4.0.9",
     "rolldown": "1.0.0-beta.24",
-    "rollup": "^4.44.2",
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-swc3": "^0.12.1",
     "sass": "^1.89.2",
