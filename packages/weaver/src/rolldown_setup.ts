@@ -1,5 +1,4 @@
 import pico from "picocolors";
-import { loadConfig } from "./config/config_handler.ts";
 import { resolve } from "node:path";
 import { cwd } from "node:process";
 
@@ -7,6 +6,9 @@ import postcss from "rollup-plugin-postcss";
 import { swc } from "rollup-plugin-swc3";
 //import url, { type RollupUrlOptions } from "@rollup/plugin-url";
 import type { RolldownOptions, WarningHandlerWithDefault } from "rolldown";
+
+import { loadConfig } from "./config/config_handler.ts";
+import { handleVendorFiles } from "./rolldown_plugins.ts";
 
 const config = await loadConfig();
 //const mode = process.env.NODE_ENV || "development";
@@ -26,6 +28,7 @@ const onwarn: WarningHandlerWithDefault = (warning, log) => {
 export const rolldownOptions: RolldownOptions = {
   onwarn,
   input: resolve(cwd(), config.bundler.filesystem!.projectFiles.entryPoint),
+
   plugins: [
     // @ts-expect-error
     postcss({
@@ -41,6 +44,7 @@ export const rolldownOptions: RolldownOptions = {
         },
       },
     }),
+    handleVendorFiles(),
     swc(config.bundler.swc),
   ],
 };

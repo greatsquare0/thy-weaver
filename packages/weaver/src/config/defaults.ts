@@ -21,7 +21,7 @@ export const defaultConfig: ThyWevearOptions = {
         entryPoint: "src/assets/app/index.ts",
         fontsDir: "src/assets/fonts/",
         mediaDir: "src/assets/media/",
-        vendorFilesDir: "src/assets/vendor",
+        vendorFilesDir: "src/assets/vendor/",
         storyDir: "src/story/",
       },
       stagingDir: resolve(tempFolderPath(), "staging/"),
