@@ -7,9 +7,11 @@ import { transform as swcTranform } from "@swc/core";
 import postcss from "postcss";
 
 import { loadConfig } from "./config/config_handler.ts";
-import { concat, win2posixPath } from "./utils.ts";
+import { concat, fancyOraPrefixer, win2posixPath } from "./utils.ts";
 import { outputFile } from "fs-extra/esm";
 import { platform } from "node:os";
+import ora from "ora";
+import pico from "picocolors";
 
 const config = await loadConfig();
 
@@ -29,9 +31,17 @@ export const handleVendorFiles = async () => {
               cwd(),
               config.bundler.filesystem!.projectFiles.vendorFilesDir,
             );
+      const spinner = ora({
+        prefixText: fancyOraPrefixer("ROLLDOWN"),
+      });
 
+      spinner.start("Processing vendor files");
+      const startStamp = Date.now();
       await handleVendorScripts(this, path);
       await handleVendorStyles(this, path);
+      spinner.succeed(
+        `Vendor files processing finished in ${pico.yellow(`${Date.now() - startStamp}ms`)}`,
+      );
     },
   } as Plugin;
 };

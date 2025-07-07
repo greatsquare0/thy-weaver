@@ -95,7 +95,7 @@ export const fancyLogFormater = (
   }
 
   const result: string[] = [
-    `${emiterLabel} ${levelLabel == null ? null : levelLabel} ${log.message}`,
+    `${emiterLabel} ${levelLabel == null ? "" : levelLabel} ${log.message}`,
   ];
 
   log.cause ? result.push(`\n${log.cause}\n`) : null;
