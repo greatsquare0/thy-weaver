@@ -12,23 +12,18 @@
   },
   "type": "module",
   "bin": {
-    "weaver": "dist/main.js"
+    "weaver": "dist/cli.js"
   },
   "scripts": {
     "build": "tsdown --minify",
     "dev": "tsdown --watch",
-    "weaver": "dist/main.js"
+    "weaver": "dist/cli.js"
   },
   "exports": {
     ".": {
       "import": "./dist/main.js",
       "require": "./dist/main.js",
       "types": "./dist/main.d.ts"
-    },
-    "./config": {
-      "import": "./dist/config.js",
-      "require": "./dist/config.js",
-      "types": "./dist/config.d.ts"
     }
   },
   "files": [
