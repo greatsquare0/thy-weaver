@@ -3,6 +3,7 @@
   "compilerOptions": {
     "allowImportingTsExtensions": true,
     "noEmit": true,
-    "emitDeclarationOnly": false
+    "emitDeclarationOnly": false,
+    "resolveJsonModule": true
   }
 }
