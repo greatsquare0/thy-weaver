@@ -1,12 +1,16 @@
 import ora from "ora";
-import { fancyLogFormater, colorizeEmiter, colorizeLabel } from "./utils.ts";
+import {
+  fancyLogFormater,
+  colorizeEmiter,
+  colorizeLabel,
+  resolveToProjectRoot,
+} from "./utils.ts";
 import { setupTweego } from "tweenode";
 import { rolldown } from "rolldown";
 import { setupRolldown } from "./rolldown_setup.ts";
 import { loadConfig } from "./config/config_handler.ts";
 import pico from "picocolors";
 import { copy, remove } from "fs-extra/esm";
-import { cwd } from "node:process";
 import { resolve } from "node:path";
 
 const config = await loadConfig();
@@ -68,10 +72,9 @@ export const moveFiles = async () => {
 
   const filesystemConfig = config.bundler.filesystem;
 
-  console.log(resolve(cwd(), filesystemConfig!.dist));
   try {
     spinner.start("Cleaning-up dist/...");
-    //await remove(resolve(cwd(), filesystemConfig!.dist));
+    await remove(resolveToProjectRoot(filesystemConfig!.dist));
     spinner.succeed("dist/ clean!");
   } catch (error) {
     spinner.fail(` ${colorizeLabel("ERROR")} Failed cleanup dist:\n${error}\n`);
@@ -81,8 +84,8 @@ export const moveFiles = async () => {
     const startStamp = Date.now();
     spinner.start("Coping media files...");
     await copy(
-      resolve(cwd(), filesystemConfig!.projectFiles.mediaDir),
-      resolve(cwd(), filesystemConfig!.dist),
+      resolveToProjectRoot(filesystemConfig!.projectFiles.mediaDir),
+      resolveToProjectRoot(filesystemConfig!.dist + "/media"),
     );
 
     spinner.succeed(

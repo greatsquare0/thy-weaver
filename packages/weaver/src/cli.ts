@@ -3,7 +3,7 @@ import { program } from "commander";
 import pkg from "../package.json" with { type: "json" };
 const { version, description } = pkg;
 import pico from "picocolors";
-import { moveFiles } from "./build_commands.ts";
+import { runBuild } from "./run_build.ts";
 
 program
   .name("weaver")
@@ -19,13 +19,19 @@ program
   .command("build")
   .description("Build the project to dist")
   .action(async (_str) => {
-    //return import("./run_build.ts");
-    await moveFiles();
+    await runBuild();
   });
 
 program
   .command("dev")
   .description("Start the live dev environment")
+  .action((str) => {
+    console.log(str);
+  });
+
+program
+  .command("setup")
+  .description("Downloads tweego and storyformats")
   .action((str) => {
     console.log(str);
   });
@@ -38,4 +44,3 @@ program
   });
 
 program.parse();
-process.exit(0);

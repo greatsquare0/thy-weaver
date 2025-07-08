@@ -3,7 +3,10 @@
   "type": "module",
   "version": "0.0.0",
   "description": "A starter template for a modern Twine development workflow",
-  "scripts": {},
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build"
+  },
   "template-author": "greatsquare0",
   "license": "MIT",
   "devDependencies": {

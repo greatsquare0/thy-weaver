@@ -9,6 +9,10 @@ export const tempFolderPath = () => {
   return resolve(cwd(), "node_modules", ".lib-weaver-temp");
 };
 
+export const resolveToProjectRoot = (path: string) => {
+  return resolve(cwd(), path);
+};
+
 export const isFile = async (path: PathLike) => {
   return (await stat(path)).isFile();
 };
@@ -64,6 +68,10 @@ export const colorizeEmiter = (str: Emiters) => {
     case "TWEENODE":
       output = pico.bgCyan(pico.white(pico.bold(output)));
       break;
+  }
+
+  if (str == "BUNDLER") {
+    output = " " + output;
   }
 
   return output;
