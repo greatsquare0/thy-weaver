@@ -3,6 +3,7 @@ import { program } from "commander";
 import pkg from "../package.json" with { type: "json" };
 const { version, description } = pkg;
 import pico from "picocolors";
+import { moveFiles } from "./build_commands.ts";
 
 program
   .name("weaver")
@@ -17,8 +18,9 @@ program
 program
   .command("build")
   .description("Build the project to dist")
-  .action((_str): any => {
-    return import("./run_build.ts");
+  .action(async (_str) => {
+    //return import("./run_build.ts");
+    await moveFiles();
   });
 
 program

@@ -77,6 +77,6 @@
     "rollup-plugin-swc3": "^0.12.1",
     "sass": "^1.89.2",
     "tinyglobby": "^0.2.14",
-    "tweenode": "^0.2.9"
+    "tweenode": "^0.3.0"
   }
 }

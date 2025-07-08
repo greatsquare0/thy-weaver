@@ -7,7 +7,7 @@ import { transform as swcTranform } from "@swc/core";
 import postcss from "postcss";
 
 import { loadConfig } from "./config/config_handler.ts";
-import { concat, fancyOraPrefixer, win2posixPath } from "./utils.ts";
+import { concat, colorizeEmiter, win2posixPath } from "./utils.ts";
 import { outputFile } from "fs-extra/esm";
 import { platform } from "node:os";
 import ora from "ora";
@@ -32,7 +32,7 @@ export const handleVendorFiles = async () => {
               config.bundler.filesystem!.projectFiles.vendorFilesDir,
             );
       const spinner = ora({
-        prefixText: fancyOraPrefixer("ROLLDOWN"),
+        prefixText: colorizeEmiter("ROLLDOWN"),
       });
 
       spinner.start("Processing vendor files");

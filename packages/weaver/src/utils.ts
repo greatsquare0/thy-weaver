@@ -42,15 +42,19 @@ export const win2posixPath = (path: string): string => {
   return normalize(path).replaceAll(sep, posix.sep);
 };
 
-type Emiters = "ROLLDOWN" | "TWEENODE" | "DEV SERVER";
+type Emiters = "ROLLDOWN" | "TWEENODE" | "DEV SERVER" | "BUNDLER";
 type LogLevel = "INFO" | "WARN" | "DEBUG" | "ERROR" | "PROGRESS";
 
-const colorizeEmiter = (str: Emiters) => {
+export const colorizeEmiter = (str: Emiters) => {
   let output = " " + str + " ";
 
   switch (str) {
     case "DEV SERVER":
       output = pico.bgMagenta(pico.white(pico.bold(output)));
+      break;
+
+    case "BUNDLER":
+      output = pico.bgWhite(pico.black(pico.bold(output)));
       break;
 
     case "ROLLDOWN":
@@ -65,34 +69,39 @@ const colorizeEmiter = (str: Emiters) => {
   return output;
 };
 
+export const colorizeLabel = (str: LogLevel) => {
+  let output: string | null = " " + str + " ";
+  switch (str) {
+    case "INFO":
+      output = pico.bgWhite(pico.dim(pico.bold(output)));
+      break;
+
+    case "WARN":
+      output = pico.bgYellow(pico.black(pico.bold(output)));
+      break;
+
+    case "DEBUG":
+      output = pico.bgWhite(pico.dim(pico.bold(output)));
+      break;
+
+    case "ERROR":
+      output = pico.bgRed(pico.white(pico.bold(output)));
+      break;
+    case "PROGRESS":
+      output = null;
+      break;
+  }
+
+  return output;
+};
+
 export const fancyLogFormater = (
   emiter: Emiters,
   logLevel: LogLevel,
   log: RollupLog,
 ) => {
   const emiterLabel = colorizeEmiter(emiter);
-
-  let levelLabel: string | null = " " + logLevel + " ";
-  switch (logLevel) {
-    case "INFO":
-      levelLabel = pico.bgWhite(pico.dim(pico.bold(levelLabel)));
-      break;
-
-    case "WARN":
-      levelLabel = pico.bgYellow(pico.black(pico.bold(levelLabel)));
-      break;
-
-    case "DEBUG":
-      levelLabel = pico.bgWhite(pico.dim(pico.bold(levelLabel)));
-      break;
-
-    case "ERROR":
-      levelLabel = pico.bgRed(pico.white(pico.bold(levelLabel)));
-      break;
-    case "PROGRESS":
-      levelLabel = null;
-      break;
-  }
+  const levelLabel = colorizeLabel(logLevel);
 
   const result: string[] = [
     `${emiterLabel} ${levelLabel == null ? "" : levelLabel} ${log.message}`,
@@ -103,8 +112,4 @@ export const fancyLogFormater = (
   log.stack ? result.push(`\n${log.stack}\n`) : null;
 
   return result.join("");
-};
-
-export const fancyOraPrefixer = (emiter: Emiters) => {
-  return colorizeEmiter(emiter);
 };

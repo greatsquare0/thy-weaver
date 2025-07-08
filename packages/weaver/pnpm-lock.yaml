@@ -85,8 +85,8 @@ importers:
         specifier: ^0.2.14
         version: 0.2.14
       tweenode:
-        specifier: ^0.2.9
-        version: 0.2.9
+        specifier: ^0.3.0
+        version: 0.3.0
     devDependencies:
       '@prettier/plugin-oxc':
         specifier: ^0.0.4
@@ -1691,8 +1691,8 @@ packages:
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
 
-  tweenode@0.2.9:
-    resolution: {integrity: sha512-hcbzMBVIshzRczSdUI/Ox0BsKNshJWD/eGyF/SnEZWr5aBCOkd406JmBXBImxSq46TIlm9XdBUzjM3aQm5JHNA==}
+  tweenode@0.3.0:
+    resolution: {integrity: sha512-N5Kxmqm14MYywiA2ZX60gmQ0MR1Npp9Y6yJyO+HjXrmEsvZn8rVw6JZO4lBg4wCNj61N2YbXfEPjNDYXwMtKUw==}
 
   typescript@5.8.3:
     resolution: {integrity: sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==}
@@ -3118,9 +3118,10 @@ snapshots:
   tslib@2.8.1:
     optional: true
 
-  tweenode@0.2.9:
+  tweenode@0.3.0:
     dependencies:
       adm-zip: 0.5.16
+      deepmerge-ts: 7.1.5
       fs-extra: 11.3.0
 
   typescript@5.8.3: {}
