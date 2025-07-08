@@ -1,12 +1,7 @@
 {
   "recommendations": [
-    "heybourn.headwind",
-    "oderwat.indent-rainbow",
-    "vunguyentuan.vscode-postcss",
     "esbenp.prettier-vscode",
-    "yoavbls.pretty-ts-errors",
-    "bradlc.vscode-tailwindcss",
-    "cyrusfirheir.twee3-language-tools",
-    "hirse.vscode-ungit"
-  ],
+    "oxc.oxc-vscode",
+    "EditorConfig.EditorConfig"
+  ]
 }

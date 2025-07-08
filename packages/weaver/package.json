@@ -1,5 +1,5 @@
 {
-  "name": "lib-weaver",
+  "name": "@thy-weaver/weaver",
   "version": "0.0.1-beta",
   "description": "A toolkit to compile and bundle Twine based stories",
   "main": "dist/main.js",
