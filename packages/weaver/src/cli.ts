@@ -25,8 +25,8 @@ program
 program
   .command("dev")
   .description("Start the live dev environment")
-  .action((str) => {
-    console.log(str);
+  .action(async (_str) => {
+    await import("./dev_server/main.ts");
   });
 
 program
