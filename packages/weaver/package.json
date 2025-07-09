@@ -1,7 +1,7 @@
 {
   "name": "@thy-weaver/weaver",
   "version": "0.0.1-beta",
-  "description": "A toolkit to compile and bundle Twine based stories",
+  "description": "A cli to compile and bundle Twine based stories",
   "main": "dist/main.js",
   "typesVersions": {
     "*": {
@@ -36,12 +36,12 @@
     "Tweego"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/greatsquare0/lib-weaver",
+  "homepage": "https://github.com/greatsquare0/thy-weaver",
   "repository": {
     "type": "git",
-    "url": "https://github.com/greatsquare0/lib-weaver"
+    "url": "https://github.com/greatsquare0/thy-weaver"
   },
-  "bugs": "https://github.com/greatsquare0/lib-weaver/issues",
+  "bugs": "https://github.com/greatsquare0/thy-weaver/issues",
   "devDependencies": {
     "@prettier/plugin-oxc": "^0.0.4",
     "@tsconfig/node22": "^22.0.2",
@@ -58,7 +58,6 @@
     "browserslist": "^4.25.1",
     "chokidar": "^4.0.3",
     "commander": "^14.0.0",
-    "crossws": "^0.4.1",
     "deepmerge-ts": "^7.1.5",
     "fs-extra": "^11.3.0",
     "h3": "2.0.0-beta.1",

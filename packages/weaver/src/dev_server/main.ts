@@ -1,9 +1,8 @@
-import { H3, serve, serveStatic } from "h3";
+import { H3, serve, serveStatic, createEventStream } from "h3";
 import { loadConfig } from "../config/config_handler.ts";
 import { readFile, stat } from "node:fs/promises";
 import { join } from "node:path";
-import { resolveToProjectRoot } from "../utils.ts";
-import { htmlData } from "../run_dev.ts";
+import { devState, resolveToProjectRoot } from "../utils.ts";
 
 const config = await loadConfig();
 
@@ -22,13 +21,42 @@ const placeholder = `
 `;
 
 app.get("/", (_event) => {
-  const html = htmlData() !== undefined ? htmlData() : placeholder;
+  let html = devState.html ? devState.html : placeholder;
 
-  return new Response(html, {
+  const modifiedHtml = html.replace(
+    "</head>",
+    `<script async src="http://localhost:${config.devServer!.port}/dev"></script>\n</head>`,
+  );
+
+  return new Response(modifiedHtml, {
     headers: {
       "Content-Type": "text/html",
     },
   });
+});
+
+app.get("/dev", async (_event) => {
+  const agent = await readFile(join(import.meta.dirname, "reload_agent.js"));
+
+  return new Response(agent.toString("utf-8"), {
+    headers: {
+      "Content-Type": "text/javascript",
+    },
+  });
+});
+
+export let eventStream: any;
+
+app.get("/events/", (event) => {
+  eventStream = createEventStream(event);
+
+  eventStream.push("Server test message");
+
+  eventStream.onClosed(() => {
+    console.log("Connection closed");
+  });
+
+  return eventStream.send();
 });
 
 app.use("/media/**", (event) => {

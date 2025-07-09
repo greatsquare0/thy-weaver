@@ -121,3 +121,15 @@ export const fancyLogFormater = (
 
   return result.join("");
 };
+
+interface DevState {
+  html: undefined | string;
+}
+
+export const devState: DevState = {
+  html: undefined,
+};
+
+export const updateState = (newValue: string) => {
+  devState.html = newValue;
+};

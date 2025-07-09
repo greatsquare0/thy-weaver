@@ -42,6 +42,7 @@ program
   .description("Build and package the project in to a .zip for distribution")
   .action((str) => {
     console.log(str);
+    console.log(import.meta.dirname);
   });
 
 program.parse();

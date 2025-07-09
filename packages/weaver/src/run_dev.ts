@@ -1,20 +1,19 @@
-import { signal } from "alien-signals";
 import { tweenode } from "tweenode";
 import { loadConfig } from "./config/config_handler.ts";
 import {
   colorizeEmiter,
   colorizeLabel,
   resolveToProjectRoot,
+  updateState,
 } from "./utils.ts";
 import ora from "ora";
 import pico from "picocolors";
 import { runRowndown } from "./build_commands.ts";
 import { watch } from "chokidar";
+import { eventStream } from "./dev_server/main.ts";
 
 const { bundler } = await loadConfig();
 const { filesystem } = bundler;
-
-export const htmlData = signal<string>("");
 
 const tweego = await tweenode({
   build: {
@@ -78,7 +77,7 @@ const devBuilder = async (): Promise<string | undefined> => {
 export const runDev = async () => {
   devBuilder().then(async (firstResult) => {
     if (firstResult) {
-      htmlData(firstResult);
+      updateState(firstResult);
     }
     console.log(pico.yellow(pico.bold("Waiting for file changes...")));
     await import("./dev_server/main.ts");
@@ -90,14 +89,15 @@ export const runDev = async () => {
         pollInterval: 50,
       },
     }).on("all", async () => {
-      process.stdout.write("\x1Bc");
+      //process.stdout.write("\x1Bc");
       console.log(
         `\n${pico.bgMagenta(pico.bold(" ThyWeaver - Running in dev mode "))}ㅤ`,
       );
 
       const result = await devBuilder();
       if (result) {
-        htmlData(result);
+        updateState(result);
+        eventStream.push("update");
       }
 
       console.log(pico.yellow(pico.bold("Waiting for file changes...")));
