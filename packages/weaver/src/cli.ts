@@ -4,6 +4,7 @@ import pkg from "../package.json" with { type: "json" };
 const { version, description } = pkg;
 import pico from "picocolors";
 import { runBuild } from "./run_build.ts";
+import { runDev } from "./run_dev.ts";
 
 program
   .name("weaver")
@@ -26,7 +27,7 @@ program
   .command("dev")
   .description("Start the live dev environment")
   .action(async (_str) => {
-    await import("./dev_server/main.ts");
+    await runDev();
   });
 
 program

@@ -16,5 +16,8 @@
     "turbo": "^2.5.4",
     "typescript": "^5.6.3"
   },
-  "packageManager": "pnpm@10.12.4"
+  "packageManager": "pnpm@10.12.4",
+  "dependencies": {
+    "alien-signals": "^2.0.5"
+  }
 }

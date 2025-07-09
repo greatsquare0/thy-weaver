@@ -3,13 +3,32 @@ import { loadConfig } from "../config/config_handler.ts";
 import { readFile, stat } from "node:fs/promises";
 import { join } from "node:path";
 import { resolveToProjectRoot } from "../utils.ts";
+import { htmlData } from "../run_dev.ts";
 
 const config = await loadConfig();
 
 const app = new H3();
 
+const placeholder = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Document</title>
+</head>
+<body>
+  
+</body>
+</html>
+`;
+
 app.get("/", (_event) => {
-  return "Hello world";
+  const html = htmlData() !== undefined ? htmlData() : placeholder;
+
+  return new Response(html, {
+    headers: {
+      "Content-Type": "text/html",
+    },
+  });
 });
 
 app.use("/media/**", (event) => {
