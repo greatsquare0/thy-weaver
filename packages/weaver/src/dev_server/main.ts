@@ -1,4 +1,4 @@
-import { H3, serve, serveStatic, createEventStream } from "h3";
+import { H3, serve, serveStatic } from "h3";
 import { loadConfig } from "../config/config_handler.ts";
 import { readFile, stat } from "node:fs/promises";
 import { join } from "node:path";
@@ -45,20 +45,6 @@ app.get("/dev", async (_event) => {
   });
 });
 
-export let eventStream: any;
-
-app.get("/events/", (event) => {
-  eventStream = createEventStream(event);
-
-  eventStream.push("Server test message");
-
-  eventStream.onClosed(() => {
-    console.log("Connection closed");
-  });
-
-  return eventStream.send();
-});
-
 app.use("/media/**", (event) => {
   return serveStatic(event, {
     indexNames: undefined,
@@ -99,7 +85,12 @@ app.use("/media/**", (event) => {
     },
   });
 });
-const _server = serve(app, {
-  port: config.devServer!.port,
-  hostname: config.devServer!.restricToLocalhost ? "localhost" : undefined,
-});
+const startServer = () => {
+  return serve(app, {
+    port: config.devServer!.port,
+    hostname: config.devServer!.restricToLocalhost ? "localhost" : undefined,
+    silent: true,
+  });
+};
+
+export { app, startServer };

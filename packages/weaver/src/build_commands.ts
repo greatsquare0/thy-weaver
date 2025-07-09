@@ -12,6 +12,7 @@ import { loadConfig } from "./config/config_handler.ts";
 import pico from "picocolors";
 import { copy, remove } from "fs-extra/esm";
 import { resolve } from "node:path";
+import { existsSync } from "node:fs";
 
 const config = await loadConfig();
 
@@ -21,6 +22,10 @@ export const handleTweegoSetup = async () => {
   });
 
   spinner.start("Setting-up...");
+
+  if (existsSync(resolveToProjectRoot(".tweenode"))) {
+    return spinner.succeed(".tweenode folder already exists, skipping setup");
+  }
 
   try {
     await setupTweego();
@@ -36,7 +41,7 @@ export const handleTweegoSetup = async () => {
   }
 };
 
-export const runRowndown = async () => {
+export const runRolldownn = async () => {
   const spinner = ora({
     prefixText: colorizeEmiter("ROLLDOWN"),
   });
@@ -89,7 +94,7 @@ export const moveFiles = async () => {
     );
 
     spinner.succeed(
-      `Media files copied in ${pico.yellow(`${Date.now() - startStamp}`)}`,
+      `Media files copied in ${pico.yellow(`${Date.now() - startStamp}ms`)}`,
     );
   } catch (error) {
     spinner.fail(

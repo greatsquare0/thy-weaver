@@ -8,9 +8,10 @@ import {
 } from "./utils.ts";
 import ora from "ora";
 import pico from "picocolors";
-import { runRowndown } from "./build_commands.ts";
+import { runRolldownn } from "./build_commands.ts";
 import { watch } from "chokidar";
-import { eventStream } from "./dev_server/main.ts";
+import { createEventStream } from "h3";
+import { app, startServer } from "./dev_server/main.ts";
 
 const { bundler } = await loadConfig();
 const { filesystem } = bundler;
@@ -60,7 +61,7 @@ const runTweego = async () => {
 const devBuilder = async (): Promise<string | undefined> => {
   const startStamp = Date.now();
 
-  await runRowndown();
+  await runRolldownn();
   const html = await runTweego();
 
   return new Promise((resolve) => {
@@ -75,12 +76,39 @@ const devBuilder = async (): Promise<string | undefined> => {
 };
 
 export const runDev = async () => {
+  console.log(
+    `\n${pico.bgMagenta(pico.bold(" ThyWeaver - Running in dev mode "))}ㅤ\n`,
+  );
+
   devBuilder().then(async (firstResult) => {
     if (firstResult) {
       updateState(firstResult);
     }
+
+    let eventStream: any;
+
+    app.get("/events/", (event) => {
+      eventStream = createEventStream(event);
+
+      eventStream.push("Server test message");
+
+      eventStream.onClosed(() => {
+        //console.log("Connection closed");
+      });
+
+      return eventStream.send();
+    });
+
+    const server = startServer();
+
     console.log(pico.yellow(pico.bold("Waiting for file changes...")));
-    await import("./dev_server/main.ts");
+    console.log(
+      `${pico.yellow(
+        pico.bold(
+          `Dev Server available at ${pico.cyan(`http://localhost:${server.options.port}/`)}`,
+        ),
+      )}\n`,
+    );
 
     watch(resolveToProjectRoot("src"), {
       interval: bundler.watcherDelay,
@@ -89,9 +117,9 @@ export const runDev = async () => {
         pollInterval: 50,
       },
     }).on("all", async () => {
-      //process.stdout.write("\x1Bc");
+      process.stdout.write("\x1Bc");
       console.log(
-        `\n${pico.bgMagenta(pico.bold(" ThyWeaver - Running in dev mode "))}ㅤ`,
+        `\n${pico.bgMagenta(pico.bold(" ThyWeaver - Running in dev mode "))}ㅤ\n`,
       );
 
       const result = await devBuilder();
@@ -101,6 +129,13 @@ export const runDev = async () => {
       }
 
       console.log(pico.yellow(pico.bold("Waiting for file changes...")));
+      console.log(
+        `${pico.yellow(
+          pico.bold(
+            `Dev Server available at ${pico.cyan(`http://localhost:${server.options.port}/`)}`,
+          ),
+        )}\n`,
+      );
     });
   });
 

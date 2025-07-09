@@ -7,7 +7,7 @@ import {
 } from "./utils.ts";
 import ora from "ora";
 import pico from "picocolors";
-import { handleTweegoSetup, moveFiles, runRowndown } from "./build_commands.ts";
+import { moveFiles, runRolldownn } from "./build_commands.ts";
 
 const { bundler } = await loadConfig();
 const { filesystem } = bundler;
@@ -60,8 +60,7 @@ export const runBuild = async () => {
 
   const startStamp = Date.now();
 
-  await handleTweegoSetup();
-  await runRowndown();
+  await runRolldownn();
   await moveFiles();
   await runTweego();
 
