@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "EditorConfig.EditorConfig",
+    "cyrusfirheir.twee3-language-tools",
+    "hirse.vscode-ungit",
+    "oderwat.indent-rainbow",
+    "yoavbls.pretty-ts-errors"
+  ]
+}

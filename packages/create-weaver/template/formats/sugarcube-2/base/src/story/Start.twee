@@ -1,0 +1,16 @@
+:: StoryTitle
+ThyWeaver + Sugarcube
+
+:: StoryCaption
+SugarCube Template
+Using version: <<= version.toString()>>
+
+:: Start
+
+<h1>Hello World!</h1>
+
+Lorem, <span>ipsum dolor sit amet</span> consectetur adipisicing elit. Deleniti blanditiis esse fugiat. Veniam, dolorem, vel in obcaecati assumenda qui commodi, ducimus quas voluptate totam quos suscipit fugit sequi officia quidem.
+Necessitatibus nobis illum veritatis placeat voluptatem, consequatur, quae cum nihil sint nesciunt eligendi quisquam libero, quo hic ipsam maxime reprehenderit iusto nulla odio optio. Ipsam doloribus consequuntur dolores iste explicabo.
+Nam veniam impedit provident quod blanditiis, soluta culpa mollitia iste architecto voluptates sint odit est harum tempora voluptas? Ducimus ad cumque maiores dicta reprehenderit velit beatae commodi sequi quia voluptate!
+Quibusdam facere et illo. Fugit incidunt tenetur consectetur tempora maxime officia modi dolor voluptates nulla in consequuntur repudiandae sequi culpa consequatur placeat qui illum debitis quisquam quo, obcaecati quae laudantium?
+Ipsam dolorem aperiam repudiandae velit natus dicta ratione nostrum et nihil a, consequatur, numquam distinctio quidem. Sunt sit perferendis voluptatibus necessitatibus placeat, corrupti commodi eaque! Sunt id dolore velit aperiam?

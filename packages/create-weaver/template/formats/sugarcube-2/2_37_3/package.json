@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "@types/twine-sugarcube": "^2.37.2"
+  }
+}
