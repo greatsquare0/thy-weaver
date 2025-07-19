@@ -1,6 +1,5 @@
 {
   "name": "@thy-weaver/monorepo",
-  "private": "true",
   "type": "module",
   "version": "1.0.0-alpha",
   "description": "A starter template for a modern Twine development workflow",
