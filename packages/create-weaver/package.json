@@ -1,7 +1,7 @@
 {
   "name": "create-weaver",
   "private": "false",
-  "version": "1.0.0-beta",
+  "version": "1.0.0",
   "description": "A utility to scaffold a ThyWeaver project",
   "type": "module",
   "files": [
