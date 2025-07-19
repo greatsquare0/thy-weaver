@@ -1,5 +1,11 @@
 # create-weaver
 
+## 1.0.2
+
+### Patch Changes
+
+- CI fix, again ([`fd11031`](https://github.com/greatsquare0/thy-weaver/commit/fd11031d338adc451cbe57bbcd1499bcf05301f2))
+
 ## 1.0.1
 
 ### Patch Changes
