@@ -1,5 +1,5 @@
 {
-  "name": "@thy-weaver/weaver",
+  "name": "@thy-weaver/core",
   "version": "0.0.1-beta",
   "description": "A cli to compile and bundle Twine based stories",
   "main": "dist/main.js",
