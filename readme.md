@@ -12,9 +12,9 @@
 <!-- Use this to create badges: -->
 
 <div align='center'>
-  <img alt="Dynamic JSON Badge" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fgreatsquare0%2Fthy-weaver%2Fmain%2Fpackage.json&query=%24.template-version&label=Template%20Version&color=magenta">
-  <a href='https://github.com/greatsquare0/thy-weaver/blob/main/TEMPLATE_LICENSE'> 
-    <img alt="template license: MIT" src="https://img.shields.io/badge/Template_Licence-MIT-blue">
+  <img alt="Dynamic JSON Badge" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fgreatsquare0%2Fthy-weaver%2Fmain%2Fpackage.json&query=%24.version&label=%20Version&color=magenta">
+  <a href='https://github.com/greatsquare0/thy-weaver/blob/main/LICENCE'> 
+    <img alt="License: MIT" src="https://img.shields.io/badge/Licence-MIT-blue">
   </a> 
   </div> 
 <br>
@@ -25,6 +25,9 @@
   <img alt="Static Badge" src="https://img.shields.io/badge/any_text-Supported-green?label=Node%2022%20">
   <img alt="Static Badge" src="https://img.shields.io/badge/any_text-Unsupported-red?label=Deno">
 </div> 
+
+> This new version is now in open alpha, bugs are expected
+> The old version of thy-weaver is available [here](https://github.com/greatsquare0/thy-weaver/releases/tag/legacy)
 
 ---
 ## Why?
@@ -37,6 +40,7 @@ You can consider this a "spiritual successor" (Event though, as far as I know, N
 
 ## Features
 
+- Quickly scaffold a new project, (Thanks to [create-weaver](/packages/create-weaver/readme.md))
 - Automatic Tweego setup (Thanks to [Tweenode](https://github.com/greatsquare0/tweenode))
 - Includes updated story formats, like:
   - SugarCube v2.37.3
@@ -45,80 +49,55 @@ You can consider this a "spiritual successor" (Event though, as far as I know, N
 - Highly customizable, easy to configure
 - *Lighting fast* automatic builds
 - Local live reload server
-- Directory for custom fonts
 - Directory for third-party scripts
 - Modern workflow
 
 ## Tech Stack
 
-- [Rollup](https://rollupjs.org/) (In place of Webpack)
-- [Typescript](https://www.typescriptlang.org/)
-- [SWC](https://swc.rs/) (In place of Babel)
-- [PostCSS](https://postcss.org/) with:
-  - [Tailwindcss](https://tailwindcss.com/)
-  - [SASS](https://sass-lang.com)
-  - [Modern CSS support](https://github.com/onigoetz/postcss-lightningcss) (If you want to use vanilla CSS)
+To see more how it works, check out [@thy-weaver/core](/packages/core/readme.md)
+
+> The old version of thy-weaver is available [here](https://github.com/greatsquare0/thy-weaver/releases/tag/legacy)
 
 ## Requirements
 
-- [Bun](https://bun.sh) or [Node 22](https://nodejs.org)
-- [pnpm](https://pnpm.io) (NPM probably works, but is untested, same for Bun package manager)
+- [Node 22](https://nodejs.org) or [Bun](https://bun.sh)
 
 > For using with Node, highly recommend using [Fast Node Manager (fnm)](https://github.com/Schniz/fnm)
 
 ## Getting started
 
-It's recommended to use [degit](https://github.com/Rich-Harris/degit) to clone and detach from this repo or use the Github template
-
-1. Clone this repo
-```bash
-pnpm dlx degit greatsquare0/thy-weaver <project-name>
-```
-
-2. Install its dependencies
-```bash
-pnpm install
-```
-3. Generate your story IFID, you can use [TADS IFID Generator](https://www.tads.org/ifidgen/ifidgen)
-Then place your new IFID on `:: StoryData` passage under [`./src/story/StoryData.twee`](src/story/StoryData.twee), in the ifid field
-
-```js
-:: StoryData
-{
-  "ifid": "<your-new-ifid>",
-  "format": "SugarCube",
-  "format-version": "2.37.3"
-}
-```
-
-4. Start developing
+You may use npm, pnpm or bun package manager, examples uses pnpm:
 
 ```bash
-pnpm run dev 
+pnpm create weaver@latest
 ```
-> For node, prefix the command with `node:` (example: `pnpm run node:dev`)
 
-By default, this template comes setup for SugarCube
+You be prompted with some configuration (If you want Tailwind for example), after this setup, start developing!
+
+
+```bash
+cd <your-project-path>
+
+pnpm intall 
+pnpm weaver setup
+pnpm weaver dev
+```
+
+This toolkit is more SugarCube oriented.
 If you are new to it, check out [Nijikokun SugarCube Basics](https://github.com/nijikokun/sugarcube-starter/wiki/SugarCube-Basics)
 
 ### Commands
 
-| Command                  | What it does                                                                                      |
-|--------------------------|---------------------------------------------------------------------------------------------------|
-| `pnpm run dev`           | Starts development server and watches `src/` directory                                            |
-| `pnpm run dev:withProd`  | Starts development server and watches `src/` directory in production mode (`NODE_ENV=production`) |
-| `pnpm run build`         | Compiles and bundles the story in the `dist/` directory                                           |
-| `pnpm run build:withDev` | Compiles and bundles the story in the `dist/` directory without production mode                   |
-
-> The same commands prefixed with `node:` have been added for Node 22 support (example: `pnpm run node:dev`)
+A help command is available in the cli:
+```bash
+pnpm weaver --help
+```
 
 ### Directory Structure
 
 ```toml
 thy-weaver
-├── .build/ # Where all build scripts are located
 ├── .vscode/ # Some recommended VSCode configs
-├── .prebuilt/ # Staging directory, files are processed and moved to dist/ (Auto-generated)
 ├── .tweenode/ # Tweego setup folder, handled by Tweenode (Auto-generated)
 ├── dist/ # Compiled output directory (Auto-generated)
 ├── src/ # Story and Story Assets directory
@@ -129,7 +108,6 @@ thy-weaver
 │   │   ├── media/ # Images and Videos
 │   │   └── vendor/ # Third-Party Scripts and Modules that aren't available on NPM
 │   └── story/ # Twine .twee files
-├── tailwind.config.ts # Tailwind configuration
 └── thyweaver.config.ts # Builder and dev server configuration
 ```
 
@@ -141,8 +119,6 @@ Check out the docs, [available here](https://github.com/greatsquare0/thy-weaver/
 
 ## Planned features
 
-- [x] ~~Add Node 22 support~~
-- [ ] Add Deno support 
 - [ ] Add support for packaging `dist` directory.
 - [ ] Add support for compiling to Electron or Tauri application.
 

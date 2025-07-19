@@ -3,16 +3,27 @@
   <img align='center' height='200px' alt='Logo' src='../../logo.svg'>
 </div>
 
-<h1 align='center'>create-weaver</h1>
+<h1 align='center'>@thy-weaver/core</h1>
 
 <p align='center'>
-  A starter template for a modern Twine development workflow
+  A cli to compile a twine story
 </p>
+
+
+## Stack
+
+- [Rolldown](https://rolldown.rs/) (In place of Webpack)
+- [Optional support for Typescript](https://www.typescriptlang.org/)
+- [SWC](https://swc.rs/) (In place of Babel)
+- [PostCSS](https://postcss.org/) with:
+  - [Optional support for TailwindCSS](https://tailwindcss.com/)
+  - [SASS](https://sass-lang.com)
+  - [Modern CSS support](https://github.com/onigoetz/postcss-lightningcss) (If you want to use vanilla CSS)
 
 
 ## Getting started
 
-You may use npm, pnpm or bun package manager, examples uses pnpm:
+The easiest way is using `create-weaver`
 
 ```bash
 pnpm create weaver@latest
@@ -28,7 +39,6 @@ pnpm intall
 pnpm weaver setup
 pnpm weaver dev
 ```
-
 ## License
 
 MIT

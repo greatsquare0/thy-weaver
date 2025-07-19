@@ -2,7 +2,7 @@
   "name": "@thy-weaver/monorepo",
   "private": "true",
   "type": "module",
-  "version": "0.0.0",
+  "version": "1.0.0-alpha",
   "description": "A starter template for a modern Twine development workflow",
   "homepage": "https://github.com/greatsquare0/thy-weaver/",
   "repository": {

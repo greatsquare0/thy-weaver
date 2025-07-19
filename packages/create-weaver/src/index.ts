@@ -284,7 +284,8 @@ const init = async () => {
       break;
     default:
       doneMessage += `\n  ${pkgManager} install`;
-      doneMessage += `\n  ${pkgManager} run dev`;
+      doneMessage += `\n  ${pkgManager} weaver setup`;
+      doneMessage += `\n  ${pkgManager} weaver dev`;
       break;
   }
   prompts.outro(doneMessage);
