@@ -31,43 +31,43 @@ export const STORYFORMATS: Readonly<Storyformat[]> = Object.freeze([
       },
     ],
   },
-  {
-    id: "chapbook",
-    display: "Chapbook",
-    color: picocolors.yellow,
-    version: [
-      {
-        id: "chapbook-2",
-        display: "Chapbook 2",
-        version: "2.2.0",
-        color: picocolors.yellow,
-      },
-    ],
-  },
-  {
-    id: "harlowe",
-    display: "Harlowe",
-    color: picocolors.red,
-    version: [
-      {
-        id: "harlowe-3",
-        display: "Harlowe 3",
-        version: "3.3.9",
-        color: picocolors.red,
-      },
-      {
-        id: "harlowe-4-unstable",
-        display: "Harlowe 4 Unstable",
-        version: "4.0.0",
-        color: picocolors.redBright,
-      },
-    ],
-  },
-  {
-    id: "custom",
-    color: picocolors.gray,
-    display: "Custom/define later",
-  },
+  // {
+  //   id: "chapbook",
+  //   display: "Chapbook",
+  //   color: picocolors.yellow,
+  //   version: [
+  //     {
+  //       id: "chapbook-2",
+  //       display: "Chapbook 2",
+  //       version: "2.2.0",
+  //       color: picocolors.yellow,
+  //     },
+  //   ],
+  // },
+  // {
+  //   id: "harlowe",
+  //   display: "Harlowe",
+  //   color: picocolors.red,
+  //   version: [
+  //     {
+  //       id: "harlowe-3",
+  //       display: "Harlowe 3",
+  //       version: "3.3.9",
+  //       color: picocolors.red,
+  //     },
+  //     {
+  //       id: "harlowe-4-unstable",
+  //       display: "Harlowe 4 Unstable",
+  //       version: "4.0.0",
+  //       color: picocolors.redBright,
+  //     },
+  //   ],
+  // },
+  // {
+  //   id: "custom",
+  //   color: picocolors.gray,
+  //   display: "Custom/define later",
+  // },
 ]);
 
 type ADDON_ID = "tailwind" | "typescript" | "linting";
