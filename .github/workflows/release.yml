@@ -51,8 +51,7 @@ jobs:
         id: changesets
         uses: changesets/action@v1
         with:
-          publish: pnpm run ci:publish
-          version: pnpm run ci:version
+          publish: pnpm changeset publish
           commit: "[chore] version bumped"
           title: "[chore] version bumped"
         env:
