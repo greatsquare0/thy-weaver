@@ -9,7 +9,7 @@
     "setup": "weaver setup"
   },
   "dependencies": {
-    "@thy-weaver/weaver": "latest"
+    "@thy-weaver/core": "^1.0.0"
   },
   "devDependencies": {}
 }
