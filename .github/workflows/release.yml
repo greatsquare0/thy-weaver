@@ -12,6 +12,7 @@ jobs:
     permissions:
       id-token: write # for provenance
       contents: write
+      issues: write
       pull-requests: write
 
     name: Release
