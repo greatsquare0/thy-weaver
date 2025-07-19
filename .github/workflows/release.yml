@@ -12,6 +12,7 @@ jobs:
     permissions:
       id-token: write # for provenance
       contents: write
+      issues: write
       pull-requests: write
 
     name: Release
@@ -57,4 +58,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_CONFIG_PROVENANCE: true
