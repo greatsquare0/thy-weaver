@@ -34,10 +34,9 @@ const onLog = (
 
     case "warn":
       //Silence circular dependency warning
-      if (log.code === "CIRCULAR_DEPENDENCY") {
-        return undefined;
+      if (log.code !== "CIRCULAR_DEPENDENCY") {
+        defaultHandler("warn", fancyLogFormater("ROLLDOWN", "WARN", log));
       }
-      defaultHandler("warn", fancyLogFormater("ROLLDOWN", "WARN", log));
 
       break;
     default:
