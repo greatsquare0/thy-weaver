@@ -8,8 +8,10 @@ interface StoryformatVersion {
   color: Formatter;
 }
 
+type STORYFORMATS_ID = "sugarcube" | "chapbook" | "harlowe" | "custom";
+
 interface Storyformat {
-  id: string;
+  id: STORYFORMATS_ID;
   display: string;
   color: Formatter;
   version?: StoryformatVersion[];
@@ -68,8 +70,10 @@ export const STORYFORMATS: Readonly<Storyformat[]> = Object.freeze([
   },
 ]);
 
+type ADDON_ID = "tailwind" | "typescript" | "linting";
+
 interface ADDON {
-  id: string;
+  id: ADDON_ID;
   display: string;
   color: Formatter;
   tooltip?: string;

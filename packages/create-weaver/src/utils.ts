@@ -1,5 +1,6 @@
 import { readdirSync, existsSync, rmSync } from "node:fs";
 import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 export const formatTargetDir = (targetDir: string) => {
   return targetDir.trim().replace(/\/+$/g, "");
@@ -40,3 +41,29 @@ export const emptyDir = (dir: string) => {
     });
   }
 };
+
+export const templatesDir = resolve(
+  fileURLToPath(import.meta.url),
+  "../..",
+  "template",
+);
+
+interface PkgInfo {
+  name: string;
+  version: string;
+}
+
+export const pkgFromUserAgent = (
+  userAgent: string | undefined,
+): PkgInfo | undefined => {
+  if (!userAgent) return undefined;
+  const pkgSpec = userAgent.split(" ")[0];
+  const pkgSpecArr = pkgSpec.split("/");
+  return {
+    name: pkgSpecArr[0],
+    version: pkgSpecArr[1],
+  };
+};
+
+export const pkgInfo = pkgFromUserAgent(process.env.npm_config_user_agent);
+export const pkgManager = pkgInfo ? pkgInfo.name : "npm";

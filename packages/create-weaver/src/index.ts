@@ -5,7 +5,15 @@
 
 import * as prompts from "@clack/prompts";
 import pico from "picocolors";
-import { existsSync } from "node:fs";
+import {
+  existsSync,
+  cpSync,
+  readdirSync,
+  statSync,
+  readFileSync,
+  writeFileSync,
+  rmSync,
+} from "node:fs";
 import { basename, resolve } from "path";
 // import mri from "mri";
 
@@ -19,9 +27,16 @@ import {
   formatTargetDir,
   isEmpty,
   isValidPackageName,
+  pkgManager,
+  templatesDir,
   toValidPackageName,
 } from "./utils.ts";
 import { ADDONS, STORYFORMATS } from "./constants.ts";
+import { cwd } from "node:process";
+import { extname, join, relative } from "node:path";
+import { deepmerge } from "deepmerge-ts";
+import { randomUUID } from "node:crypto";
+import { globSync } from "tinyglobby";
 
 const init = async () => {
   prompts.intro(pico.bgMagenta(` ${pico.bold(pkg.name)} `));
@@ -48,7 +63,7 @@ const init = async () => {
   //#endregion
   //#region Handle directory if exisit and not enpty
 
-  if (existsSync(targetDir) && isEmpty(targetDir)) {
+  if (existsSync(targetDir) && !isEmpty(targetDir)) {
     const overwrite = await prompts.select({
       message:
         (targetDir === "."
@@ -131,6 +146,8 @@ const init = async () => {
 
     if (prompts.isCancel(version)) return cancel();
     storyFormatVersion = version;
+  } else {
+    storyFormatVersion = storyFormat.version![0];
   }
 
   //#endregion
@@ -151,11 +168,162 @@ const init = async () => {
     required: false,
   });
 
+  if (prompts.isCancel(addons)) return cancel();
+
+  if (
+    addons.some((addon) => addon.id === "tailwind") &&
+    !addons.some((addon) => addon.id === "linting")
+  ) {
+    addons.push(ADDONS.filter((addon) => addon.id === "linting")[0]);
+  }
+
   //#endregion
 
-  console.log(storyFormat);
-  console.log(storyFormatVersion);
-  console.log(addons);
+  const root = join(cwd(), targetDir);
+
+  const isTS = addons.some((addon) => addon.id === "typescript");
+
+  const templateBasePath = join(
+    templatesDir,
+    "base",
+    isTS ? "typescript" : "default",
+  );
+
+  const templateFormatPath = join(
+    templatesDir,
+    "formats",
+    storyFormatVersion.id,
+  );
+  const templateConfigPath = join(templatesDir, "config");
+
+  //#region 1) Copy base
+
+  cpSync(templateBasePath, root, { recursive: true, force: true });
+  cpSync(join(templatesDir, "base", "common"), root, {
+    recursive: true,
+    force: true,
+  });
+
+  const toRemove = globSync("**/.gitkeep", { cwd: root });
+  for (const file of toRemove) {
+    rmSync(resolve(root, file), { recursive: true, force: true });
+  }
+
+  cpSync(join(templateConfigPath, "vscode"), root, {
+    recursive: true,
+    force: true,
+  });
+
+  //#endregion
+  //#region 2) Copy story format stuff
+
+  filterCopy(join(templateFormatPath, "base"), root);
+
+  const templateFormatVersionDir = join(
+    templateFormatPath,
+    storyFormatVersion.version.replaceAll(".", "_"),
+  );
+
+  if (existsSync(join(templateFormatVersionDir, "base"))) {
+    filterCopy(join(templateFormatVersionDir, "base"), root);
+
+    if (isTS && existsSync(join(templateFormatVersionDir, "typescript"))) {
+      filterCopy(join(templateFormatVersionDir, "typescript"), root);
+    }
+  } else {
+    filterCopy(join(templateFormatVersionDir, "base"), root);
+  }
+
+  //#region 3) Copy addon stuff
+
+  const templateAddonsDir = join(templatesDir, "addons");
+
+  for (const addon of addons) {
+    if (addon.id !== "typescript") {
+      if (existsSync(join(templateAddonsDir, addon.id, "base"))) {
+        filterCopy(join(templateAddonsDir, addon.id, "base"), root);
+        cpSync(
+          join(templateAddonsDir, addon.id, isTS ? "typescript" : "default"),
+          root,
+          { recursive: true, force: true },
+        );
+      } else {
+        filterCopy(join(templateAddonsDir, addon.id), root);
+      }
+    }
+  }
+
+  //#endregion
+  //#region 4) Last touches
+
+  editFile(resolve(root, "package.json"), (content) => {
+    return content.replace(
+      `"name": "thyweaver-base"`,
+      `"name": "${packageName}"`,
+    );
+  });
+
+  editFile(resolve(root, "src/story/StoryData.twee"), (content) => {
+    return content.replace("{{ifid}}", randomUUID().toUpperCase());
+  });
+
+  //#endregion
+
+  let doneMessage = "";
+  const cdProjectName = relative(cwd(), root);
+  doneMessage += `Done. Now run:\n`;
+  if (root !== cwd()) {
+    doneMessage += `\n  cd ${
+      cdProjectName.includes(" ") ? `"${cdProjectName}"` : cdProjectName
+    }`;
+  }
+  switch (pkgManager) {
+    case "yarn":
+      doneMessage += "\n  yarn";
+      doneMessage += "\n  yarn dev";
+      break;
+    default:
+      doneMessage += `\n  ${pkgManager} install`;
+      doneMessage += `\n  ${pkgManager} run dev`;
+      break;
+  }
+  prompts.outro(doneMessage);
 };
 
-await init();
+const filterCopy = (src: string, dest: string) => {
+  for (const file of readdirSync(src, { recursive: true, encoding: "utf-8" })) {
+    const srcFile = resolve(src, file);
+    const destFile = resolve(dest, file);
+
+    const srcStat = statSync(srcFile);
+
+    if (srcStat.isDirectory() && isEmpty(srcFile)) {
+      cpSync(srcFile, destFile, { force: true, recursive: true });
+    }
+
+    if (srcStat.isFile()) {
+      if (extname(srcFile) === ".json" && existsSync(destFile)) {
+        mergeJsonFromFiles(srcFile, destFile);
+      } else {
+        cpSync(srcFile, destFile, { force: true, recursive: true });
+      }
+    }
+  }
+};
+
+const mergeJsonFromFiles = (fromPath: string, intoPath: string) => {
+  const fromFile = JSON.parse(readFileSync(fromPath, { encoding: "utf-8" }));
+  const intoFile = JSON.parse(readFileSync(intoPath, { encoding: "utf-8" }));
+
+  const merged = JSON.stringify(deepmerge(intoFile, fromFile), null, 2);
+  writeFileSync(intoPath, merged, { encoding: "utf-8" });
+};
+
+const editFile = (file: string, callback: (content: string) => string) => {
+  const content = readFileSync(file, "utf-8");
+  writeFileSync(file, callback(content), "utf-8");
+};
+
+init().catch((error) => {
+  console.error(error);
+});

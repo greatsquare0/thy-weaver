@@ -6,13 +6,12 @@
   "files": [
     "dist"
   ],
-  "license":"MIT",
+  "license": "MIT",
   "homepage": "https://github.com/greatsquare0/thy-weaver/tree/main/packages/create-weaver",
   "repository": {
     "type": "git",
     "url": "https://github.com/greatsquare0/thy-weaver/tree/main/packages/create-weaver"
   },
-
   "bin": {
     "create-weaver": "./dist/index.js"
   },
@@ -36,7 +35,9 @@
   },
   "dependencies": {
     "@clack/prompts": "^0.11.0",
+    "deepmerge-ts": "^7.1.5",
     "mri": "^1.2.0",
-    "picocolors": "^1.1.1"
+    "picocolors": "^1.1.1",
+    "tinyglobby": "^0.2.14"
   }
 }
