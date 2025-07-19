@@ -4,7 +4,8 @@
   "description": "A utility to scaffold a ThyWeaver project",
   "type": "module",
   "files": [
-    "dist"
+    "dist",
+    "template"
   ],
   "license": "MIT",
   "homepage": "https://github.com/greatsquare0/thy-weaver/tree/main/packages/create-weaver",
