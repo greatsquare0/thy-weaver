@@ -1,11 +1,20 @@
 {
   "name": "@thy-weaver/monorepo",
+  "private": "true",
   "type": "module",
   "version": "0.0.0",
   "description": "A starter template for a modern Twine development workflow",
+  "homepage": "https://github.com/greatsquare0/thy-weaver/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/greatsquare0/thy-weaver/"
+  },
+  "bugs": "https://github.com/greatsquare0/thy-weaver/issues",
   "scripts": {
     "dev": "turbo dev",
-    "build": "turbo build"
+    "build": "turbo build",
+    "ci:version": "changeset version",
+    "ci:publish": "changeset publish"
   },
   "template-author": "greatsquare0",
   "license": "MIT",
