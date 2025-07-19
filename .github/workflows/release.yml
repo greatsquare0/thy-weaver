@@ -52,7 +52,7 @@ jobs:
         uses: changesets/action@v1
         with:
           version: pnpm run ci:version
-          publish: pnpm run ci:publish
+          publish: pnpm publish -r --access public
           commit: "[chore] version bumped"
           title: "[chore] version bumped"
         env:
