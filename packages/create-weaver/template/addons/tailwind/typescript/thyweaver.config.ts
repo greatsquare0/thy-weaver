@@ -1,4 +1,4 @@
-import { defineConfig } from "@thy-weaver/weaver";
+import { defineConfig } from "@thy-weaver/core";
 import tailwind from "@tailwindcss/postcss";
 
 const config = defineConfig({

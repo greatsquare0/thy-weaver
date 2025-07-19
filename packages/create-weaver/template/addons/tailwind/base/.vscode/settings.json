@@ -1,0 +1,8 @@
+{
+  "tailwindCSS.includeLanguages": {
+    "twee3-sugarcube-2": "html",
+    "twee3-chapbook-2": "html",
+    "twee3-harlowe-3": "html",
+    "twee3-harlowe-4": "html",
+  }
+}

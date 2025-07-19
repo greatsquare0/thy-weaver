@@ -1,5 +1,3 @@
 {
-  "plugins": [
-    "@prettier/plugin-oxc"
-  ]
+  "plugins": ["@prettier/plugin-oxc", "prettier-plugin-organize-imports"]
 }

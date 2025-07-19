@@ -1,4 +1,4 @@
-import { defineConfig } from "@thy-weaver/weaver";
+import { defineConfig } from "@thy-weaver/core";
 
 const config = defineConfig({
   devServer: {
