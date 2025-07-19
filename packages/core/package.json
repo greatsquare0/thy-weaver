@@ -15,7 +15,7 @@
     "weaver": "dist/cli.js"
   },
   "scripts": {
-    "build": "tsdown --minify",
+    "build": "tsdown",
     "dev": "tsdown --watch",
     "weaver": "dist/cli.js"
   },
@@ -36,10 +36,10 @@
     "Tweego"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/greatsquare0/thy-weaver",
+  "homepage": "https://github.com/greatsquare0/thy-weaver/tree/main/packages/core",
   "repository": {
     "type": "git",
-    "url": "https://github.com/greatsquare0/thy-weaver"
+    "url": "https://github.com/greatsquare0/thy-weaver/tree/main/packages/core"
   },
   "bugs": "https://github.com/greatsquare0/thy-weaver/issues",
   "devDependencies": {

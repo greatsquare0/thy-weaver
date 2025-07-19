@@ -61,7 +61,7 @@ const loadTsConfig = async (_filepath: string, content: string) => {
 };
 
 const options: Partial<Options> = {
-  searchPlaces: ["weaver.config.ts", "weaver.config.js"],
+  searchPlaces: ["thyweaver.config.ts", "thyweaver.config.js"],
   loaders: {
     ...defaultLoaders,
     ".ts": loadTsConfig,
