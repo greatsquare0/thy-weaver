@@ -1,5 +1,11 @@
 # create-weaver
 
+## 1.0.3
+
+### Patch Changes
+
+- [repo] Hopefully fixes publishing, again, 2x ([`848bc62`](https://github.com/greatsquare0/thy-weaver/commit/848bc62abd1ebe950b314e721c55ac2a7b0d1f51))
+
 ## 1.0.2
 
 ### Patch Changes
