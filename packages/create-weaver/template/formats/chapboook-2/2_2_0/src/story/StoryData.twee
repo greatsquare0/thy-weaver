@@ -1,0 +1,7 @@
+:: StoryData
+{
+	"ifid": "{{ifid}}",
+	"format": "Chapbook",
+	"format-version": "2.2.0"
+}
+

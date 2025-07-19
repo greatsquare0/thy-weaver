@@ -1,0 +1,17 @@
+{
+  "name": "thyweaver-base",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "weaver dev",
+    "build": "weaver build",
+    "setup": "weaver setup"
+  },
+  "dependencies": {
+    "@thy-weaver/weaver": "latest"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}

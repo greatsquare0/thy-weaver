@@ -1,0 +1,4 @@
+{
+  "plugins": ["@prettier/plugin-oxc", "prettier-plugin-tailwindcss"],
+  "tailwindStylesheet": "./src/assets/app/styles/main.css"
+}

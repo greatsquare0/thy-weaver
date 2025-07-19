@@ -13,34 +13,8 @@
     "*.tsx": "${capture}.ts",
     "*.css": "${capture}.css.map",
     "tsconfig.json": "tsconfig.*.json",
-    "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, bun.lockb, TEMPLATE_LICENSE, .node-version, pnpm-workspace.yaml, LICENSE"
+    "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, bun.lockb, .editorconfig, .node-version, pnpm-workspace.yaml, LICENSE"
   },
-  "twee3LanguageTools.storyformat.current": "sugarcube-2",
-  "files.associations": {
-    "*.css": "postcss"
-  },
-  "tailwindCSS.includeLanguages": {
-    "twee3-sugarcube-2": "html"
-  },
-  "emmet.includeLanguages": {
-    "postcss": "css",
-    "twee3-sugarcube-2": "html"
-  },
-  "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  // formatter
-  "prettier.tabWidth": 2,
-  "prettier.semi": false,
-  "prettier.trailingComma": "es5",
-  "prettier.arrowParens": "avoid",
-  "prettier.endOfLine": "auto",
-  "prettier.singleQuote": true,
   "editor.formatOnSave": true,
+
 }

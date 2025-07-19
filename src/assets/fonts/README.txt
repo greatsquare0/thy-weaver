@@ -1,1 +1,0 @@
-It's recommended to use variable weight fonts

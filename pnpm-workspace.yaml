@@ -1,0 +1,8 @@
+injectWorkspacePackages: false
+
+packages:
+  - packages/*
+
+onlyBuiltDependencies:
+  - "@parcel/watcher"
+  - "@swc/core"

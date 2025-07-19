@@ -1,0 +1,46 @@
+{
+  "name": "create-weaver",
+  "private": "false",
+  "version": "1.0.0-beta",
+  "description": "A utility to scaffold a ThyWeaver project",
+  "type": "module",
+  "files": [
+    "dist",
+    "template"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/greatsquare0/thy-weaver/tree/main/packages/create-weaver",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/greatsquare0/thy-weaver/tree/main/packages/create-weaver"
+  },
+  "bugs": "https://github.com/greatsquare0/thy-weaver/issues",
+  "bin": {
+    "create-weaver": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsdown --dts",
+    "dev": "tsdown --watch",
+    "create-weaver": "dist/index.js"
+  },
+  "devDependencies": {
+    "@tsconfig/node22": "^22.0.2",
+    "@types/node": "^24.0.10",
+    "tsdown": "^0.12.9",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.11.0",
+    "deepmerge-ts": "^7.1.5",
+    "mri": "^1.2.0",
+    "picocolors": "^1.1.1",
+    "tinyglobby": "^0.2.14"
+  }
+}
