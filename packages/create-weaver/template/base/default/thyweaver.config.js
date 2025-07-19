@@ -8,6 +8,11 @@ const config = defineConfig({
   },
   bundler: {
     watcherDelay: 1000,
+    filesystem: {
+      projectFiles: {
+        entryPoint: "src/assets/app/index.js",
+      },
+    },
   },
 });
 
