@@ -213,6 +213,10 @@ const init = async () => {
     recursive: true,
     force: true,
   });
+  cpSync(join(templateConfigPath, "editorconfig"), root, {
+    recursive: true,
+    force: true,
+  });
 
   //#endregion
   //#region 2) Copy story format stuff
