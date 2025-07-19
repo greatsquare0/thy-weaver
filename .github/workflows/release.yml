@@ -51,7 +51,7 @@ jobs:
         id: changesets
         uses: changesets/action@v1
         with:
-          publish: pnpm changeset publish
+          publish: pnpm publish -r --access=public
           commit: "[chore] version bumped"
           title: "[chore] version bumped"
         env:
