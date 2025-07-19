@@ -24,12 +24,12 @@ export const handleVendorFiles = async () => {
           ? win2posixPath(
               resolve(
                 cwd(),
-                config.bundler.filesystem!.projectFiles.vendorFilesDir,
+                config.bundler.filesystem!.projectFiles!.vendorFilesDir!,
               ),
             )
           : resolve(
               cwd(),
-              config.bundler.filesystem!.projectFiles.vendorFilesDir,
+              config.bundler.filesystem!.projectFiles!.vendorFilesDir!,
             );
       const spinner = ora({
         prefixText: colorizeEmiter("ROLLDOWN"),
@@ -56,13 +56,13 @@ const handleVendorScripts = async (ctx: PluginContext, path: string) => {
     const result = await swcTranform(rawScripts, config.bundler.swc);
 
     await outputFile(
-      resolve(config.bundler.filesystem!.stagingDir, "vendor.bundle.js"),
+      resolve(config.bundler.filesystem!.stagingDir!, "vendor.bundle.js"),
       result.code,
     );
 
     if (result.map) {
       await outputFile(
-        resolve(config.bundler.filesystem!.stagingDir, "vendor.bundle.js.map"),
+        resolve(config.bundler.filesystem!.stagingDir!, "vendor.bundle.js.map"),
         result.map,
       );
     }
@@ -84,13 +84,16 @@ const handleVendorStyles = async (ctx: PluginContext, path: string) => {
     );
 
     await outputFile(
-      resolve(config.bundler.filesystem!.stagingDir, "vendor.bundle.css"),
+      resolve(config.bundler.filesystem!.stagingDir!, "vendor.bundle.css"),
       result.css,
     );
 
     if (result.map) {
       await outputFile(
-        resolve(config.bundler.filesystem!.stagingDir, "vendor.bundle.css.map"),
+        resolve(
+          config.bundler.filesystem!.stagingDir!,
+          "vendor.bundle.css.map",
+        ),
         result.map.toString(),
       );
     }

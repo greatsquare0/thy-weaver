@@ -15,7 +15,7 @@ const { filesystem } = bundler;
 const tweego = await tweenode({
   build: {
     input: {
-      storyDir: resolveToProjectRoot(filesystem!.projectFiles.storyDir),
+      storyDir: resolveToProjectRoot(filesystem!.projectFiles!.storyDir!),
       scripts: filesystem!.stagingDir + "/app.bundle.js",
       styles: filesystem!.stagingDir + "/app.bundle.css",
       modules: [

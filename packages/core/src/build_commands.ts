@@ -59,7 +59,7 @@ export const runRolldownn = async () => {
   const bundle = await rolldown(setupRolldown());
   await bundle.write({
     format: "esm",
-    file: resolve(config.bundler.filesystem!.stagingDir, "app.bundle.js"),
+    file: resolve(config.bundler.filesystem!.stagingDir!, "app.bundle.js"),
   });
 
   bundle.close();
@@ -79,7 +79,7 @@ export const moveFiles = async () => {
 
   try {
     spinner.start("Cleaning-up dist/...");
-    await remove(resolveToProjectRoot(filesystemConfig!.dist));
+    await remove(resolveToProjectRoot(filesystemConfig!.dist!));
     spinner.succeed("dist/ clean!");
   } catch (error) {
     spinner.fail(` ${colorizeLabel("ERROR")} Failed cleanup dist:\n${error}\n`);
@@ -89,7 +89,7 @@ export const moveFiles = async () => {
     const startStamp = Date.now();
     spinner.start("Coping media files...");
     await copy(
-      resolveToProjectRoot(filesystemConfig!.projectFiles.mediaDir),
+      resolveToProjectRoot(filesystemConfig!.projectFiles!.mediaDir!),
       resolveToProjectRoot(filesystemConfig!.dist + "/media"),
     );
 

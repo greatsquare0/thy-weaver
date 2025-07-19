@@ -48,7 +48,7 @@ const onLog = (
 export const setupRolldown = () => {
   return {
     onLog,
-    input: resolve(cwd(), config.bundler.filesystem!.projectFiles.entryPoint),
+    input: resolve(cwd(), config.bundler.filesystem!.projectFiles!.entryPoint!),
 
     plugins: [
       // @ts-expect-error

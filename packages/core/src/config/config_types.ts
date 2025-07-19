@@ -24,15 +24,15 @@ export interface BundlerOptions {
   compilationTarget?: string;
   additionalAssets?: AdditionalAsset[];
   filesystem?: {
-    projectFiles: {
-      entryPoint: string;
-      storyDir: string;
-      mediaDir: string;
-      fontsDir: string;
-      vendorFilesDir: string;
+    projectFiles?: {
+      entryPoint?: string;
+      storyDir?: string;
+      mediaDir?: string;
+      fontsDir?: string;
+      vendorFilesDir?: string;
     };
-    stagingDir: string;
-    dist: string;
+    stagingDir?: string;
+    dist?: string;
   };
 
   swc?: SWCOptions;
