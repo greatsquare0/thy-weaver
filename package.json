@@ -10,7 +10,9 @@
   "template-author": "greatsquare0",
   "license": "MIT",
   "devDependencies": {
+    "@changesets/cli": "^2.29.5",
     "@prettier/plugin-oxc": "^0.0.4",
+    "@svitejs/changesets-changelog-github-compact": "^1.2.0",
     "oxlint": "^1.6.0",
     "prettier": "^3.6.2",
     "turbo": "^2.5.4",
