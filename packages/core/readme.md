@@ -1,6 +1,6 @@
 <!-- Logo created using MaterialDesign icons available at: https://github.com/Templarian/MaterialDesign -->
 <div align='center'>
-  <img align='center' height='200px' alt='Logo' src='../../logo.svg'>
+  <img align='center' height='200px' alt='Logo' src='https://raw.githubusercontent.com/greatsquare0/thy-weaver/main/logo.svg'>
 </div>
 
 <h1 align='center'>@thy-weaver/core</h1>
