@@ -199,10 +199,7 @@ const init = async () => {
   //#region 1) Copy base
 
   cpSync(templateBasePath, root, { recursive: true, force: true });
-  cpSync(join(templatesDir, "base", "common"), root, {
-    recursive: true,
-    force: true,
-  });
+  filterCopy(join(templatesDir, "base", "common"), root);
 
   const toRemove = globSync("**/.gitkeep", { cwd: root });
   for (const file of toRemove) {
@@ -310,7 +307,11 @@ const filterCopy = (src: string, dest: string) => {
       if (extname(srcFile) === ".json" && existsSync(destFile)) {
         mergeJsonFromFiles(srcFile, destFile);
       } else if (basename(srcFile).startsWith("_")) {
-        const newDest = dirname(destFile) + basename(srcFile).replace("_", ".");
+        const newDest = join(
+          dirname(destFile),
+          basename(srcFile).replace("_", "."),
+        );
+
         cpSync(srcFile, newDest, { force: true, recursive: true });
       } else {
         cpSync(srcFile, destFile, { force: true, recursive: true });
