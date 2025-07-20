@@ -19,7 +19,7 @@
   </div> 
 <br>
 
-<p align='center''>Runtime Support</p>
+<p align='center'>Runtime Support</p>
 <div align='center'>
   <img alt="Static Badge" src="https://img.shields.io/badge/any_text-Supported-green?label=Bun">
   <img alt="Static Badge" src="https://img.shields.io/badge/any_text-Supported-green?label=Node%2022%20">
@@ -150,3 +150,11 @@ Third-Party Resources
 ## Huge thanks to:
 
 - [@Nijikokun](https://github.com/nijikokun), a lot of this project is based on his SugarCube Starter
+
+## Contributors:
+
+<a href="https://github.com/greatsquare0/thy-weaver/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=greatsquare0/thy-weaver" />
+</a>
+
+Made with [contrib.rocks](https://contrib.rocks).
