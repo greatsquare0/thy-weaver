@@ -33,7 +33,7 @@ import {
 } from "./utils.ts";
 import { ADDONS, STORYFORMATS } from "./constants.ts";
 import { cwd } from "node:process";
-import { extname, join, relative } from "node:path";
+import { dirname, extname, join, relative } from "node:path";
 import { deepmerge } from "deepmerge-ts";
 import { randomUUID } from "node:crypto";
 import { globSync } from "tinyglobby";
@@ -309,6 +309,9 @@ const filterCopy = (src: string, dest: string) => {
     if (srcStat.isFile()) {
       if (extname(srcFile) === ".json" && existsSync(destFile)) {
         mergeJsonFromFiles(srcFile, destFile);
+      } else if (basename(srcFile).startsWith("_")) {
+        const newDest = dirname(destFile) + basename(srcFile).replace("_", ".");
+        cpSync(srcFile, newDest, { force: true, recursive: true });
       } else {
         cpSync(srcFile, destFile, { force: true, recursive: true });
       }
@@ -317,8 +320,20 @@ const filterCopy = (src: string, dest: string) => {
 };
 
 const mergeJsonFromFiles = (fromPath: string, intoPath: string) => {
-  const fromFile = JSON.parse(readFileSync(fromPath, { encoding: "utf-8" }));
-  const intoFile = JSON.parse(readFileSync(intoPath, { encoding: "utf-8" }));
+  let fromFile;
+
+  try {
+    fromFile = JSON.parse(readFileSync(fromPath, { encoding: "utf-8" }));
+  } catch (error) {
+    console.error(`Error parsing: ${fromPath}\n`, error);
+  }
+
+  let intoFile;
+  try {
+    intoFile = JSON.parse(readFileSync(intoPath, { encoding: "utf-8" }));
+  } catch (error) {
+    console.error(`Error parsing: ${fromPath}\n`, error);
+  }
 
   const merged = JSON.stringify(deepmerge(intoFile, fromFile), null, 2);
   writeFileSync(intoPath, merged, { encoding: "utf-8" });
