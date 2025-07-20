@@ -321,18 +321,22 @@ const filterCopy = (src: string, dest: string) => {
 
 const mergeJsonFromFiles = (fromPath: string, intoPath: string) => {
   let fromFile;
+  let intoRaw;
+  let fromRaw;
 
   try {
-    fromFile = JSON.parse(readFileSync(fromPath, { encoding: "utf-8" }));
+    fromRaw = readFileSync(fromPath, { encoding: "utf-8" });
+    fromFile = JSON.parse(fromRaw);
   } catch (error) {
-    console.error(`Error parsing: ${fromPath}\n`, error);
+    console.error(`Error parsing: ${fromPath}\n`, error, "\n\n" + fromRaw);
   }
 
   let intoFile;
   try {
-    intoFile = JSON.parse(readFileSync(intoPath, { encoding: "utf-8" }));
+    intoRaw = readFileSync(intoPath, { encoding: "utf-8" });
+    intoFile = JSON.parse(intoRaw);
   } catch (error) {
-    console.error(`Error parsing: ${fromPath}\n`, error);
+    console.error(`Error parsing: ${fromPath}\n`, error, "\n\n" + intoRaw);
   }
 
   const merged = JSON.stringify(deepmerge(intoFile, fromFile), null, 2);
