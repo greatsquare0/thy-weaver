@@ -1,5 +1,13 @@
 # create-weaver
 
+## 1.0.3
+
+### Patch Changes
+
+- Template fixes ([`4506aab`](https://github.com/greatsquare0/thy-weaver/commit/4506aab2e3164d91e97b485e392dd3372c3906ff))
+
+- [create-weaver] Fix missing head_content.html ([`fdb256b`](https://github.com/greatsquare0/thy-weaver/commit/fdb256b1103247bb6b28030b70b9a1b3803d4210))
+
 ## 1.0.1
 
 ### Patch Changes
