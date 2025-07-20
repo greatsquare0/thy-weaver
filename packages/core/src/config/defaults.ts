@@ -23,6 +23,7 @@ export const defaultConfig: ThyWevearOptions = {
         mediaDir: "src/assets/media/",
         vendorFilesDir: "src/assets/vendor/",
         storyDir: "src/story/",
+        htmlHead: "src/head_content.html",
       },
       stagingDir: resolve(tempFolderPath(), "staging/"),
     },

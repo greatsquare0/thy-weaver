@@ -18,6 +18,7 @@ const tweego = await tweenode({
       storyDir: resolveToProjectRoot(filesystem!.projectFiles!.storyDir!),
       scripts: filesystem!.stagingDir + "/app.bundle.js",
       styles: filesystem!.stagingDir + "/app.bundle.css",
+      htmlHead: resolveToProjectRoot(filesystem!.projectFiles!.htmlHead!),
       modules: [
         filesystem!.stagingDir + "/vendor.bundle.css",
         filesystem!.stagingDir + "/vendor.bundle.js",

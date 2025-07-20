@@ -30,6 +30,7 @@ export interface BundlerOptions {
       mediaDir?: string;
       fontsDir?: string;
       vendorFilesDir?: string;
+      htmlHead?: string;
     };
     stagingDir?: string;
     dist?: string;
