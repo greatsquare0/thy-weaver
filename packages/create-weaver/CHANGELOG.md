@@ -1,5 +1,13 @@
 # create-weaver
 
+## 1.0.1
+
+### Patch Changes
+
+- Small fixes ([`435dce1`](https://github.com/greatsquare0/thy-weaver/commit/435dce1e4d2458615fcbd4aacb58851f5c9c64be))
+
+- Some template fixes ([`918cc83`](https://github.com/greatsquare0/thy-weaver/commit/918cc831d7b63a28cfda40c489556ba37241ea94))
+
 ## 1.0.0
 
 ### Major Changes
