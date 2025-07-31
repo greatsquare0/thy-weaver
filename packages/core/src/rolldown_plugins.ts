@@ -3,6 +3,7 @@ import { glob } from "tinyglobby";
 
 import { resolve } from "node:path";
 import { cwd } from "node:process";
+import { readFile } from "node:fs/promises";
 import { transform as swcTranform } from "@swc/core";
 import postcss from "postcss";
 
@@ -99,5 +100,18 @@ const handleVendorStyles = async (ctx: PluginContext, path: string) => {
     }
   } catch (error: any) {
     ctx.error(error);
+  }
+};
+
+
+export const rawImportSupport = () => {
+  return {
+    name: 'raw-import-support',
+    async load(id) {
+      if (id.endsWith('?raw')) {
+        const rawContent = await readFile(id.replace('?raw', ''), 'utf8');
+        return `export default \`${rawContent.replace(/`/g, '\\`')}\`;`;
+      }
+    }
   }
 };
