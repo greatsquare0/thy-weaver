@@ -1,15 +1,9 @@
 {
   "name": "@thy-weaver/core",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A cli to compile and bundle Twine based stories",
   "main": "dist/main.js",
-  "typesVersions": {
-    "*": {
-      "*": [
-        "./dist/*"
-      ]
-    }
-  },
+  "types": "dist/main.d.ts",
   "type": "module",
   "bin": {
     "weaver": "dist/cli.js"
@@ -24,10 +18,14 @@
       "import": "./dist/main.js",
       "require": "./dist/main.js",
       "types": "./dist/main.d.ts"
+    },
+    "./types": {
+      "types": "./types/index.d.ts"
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "types"
   ],
   "keywords": [
     "Twine",

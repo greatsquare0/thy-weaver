@@ -1,6 +1,6 @@
 {
   "name": "create-weaver",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A utility to scaffold a ThyWeaver project",
   "type": "module",
   "files": [
@@ -29,6 +29,12 @@
     "dev": "tsdown --watch",
     "create-weaver": "dist/index.js"
   },
+  "keywords": [
+    "Twine",
+    "Twee",
+    "Twee3",
+    "Tweego"
+  ],
   "devDependencies": {
     "@tsconfig/node22": "^22.0.2",
     "@types/node": "^24.0.10",

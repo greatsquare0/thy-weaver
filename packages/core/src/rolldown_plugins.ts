@@ -3,6 +3,7 @@ import { glob } from "tinyglobby";
 
 import { resolve } from "node:path";
 import { cwd } from "node:process";
+import { readFile } from "node:fs/promises";
 import { transform as swcTranform } from "@swc/core";
 import postcss from "postcss";
 
@@ -100,4 +101,33 @@ const handleVendorStyles = async (ctx: PluginContext, path: string) => {
   } catch (error: any) {
     ctx.error(error);
   }
+};
+
+export const rawImportSupport = (ctx: PluginContext) => {
+  return {
+    name: "raw-import-support",
+    async load(id: string) {
+      if (id.includes("?raw")) {
+        const [path, query] = id.split("?");
+        const params = new URLSearchParams(query);
+        const encoding = (params.get("enconding") || "utf8") as BufferEncoding;
+
+        try {
+          const rawContent = await readFile(path, { encoding: encoding });
+          const escapedContent = rawContent
+            .replace(/\\/g, "\\\\") // Escape backslashes
+            .replace(/`/g, "\\`") // Escape backticks
+            .replace(/\$/g, "\\$"); // Escape dollar signs
+
+          return `export default \`${escapedContent}\`;`;
+        } catch (error: any) {
+          if (error.code === "ENOENT") {
+            return null;
+          }
+
+          ctx.error(error);
+        }
+      }
+    },
+  };
 };
