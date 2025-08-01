@@ -23,6 +23,7 @@
     "noUnusedParameters": false,
     "noPropertyAccessFromIndexSignature": false,
     "emitDeclarationOnly": false,
-    "sourceMap": false
+    "sourceMap": false,
+    "types": ["@thy-weaver/core/types"]
   }
 }
