@@ -12,7 +12,7 @@ import type {
 } from "rolldown";
 
 import { loadConfig } from "./config/config_handler.ts";
-import { handleVendorFiles } from "./rolldown_plugins.ts";
+import { handleVendorFiles, rawImportSupport } from "./rolldown_plugins.ts";
 import { fancyLogFormater } from "./utils.ts";
 
 const config = await loadConfig();
@@ -50,6 +50,7 @@ export const setupRolldown = () => {
     input: resolve(cwd(), config.bundler.filesystem!.projectFiles!.entryPoint!),
 
     plugins: [
+      rawImportSupport(),
       // @ts-expect-error
       postcss({
         module: false,
