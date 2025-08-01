@@ -103,15 +103,31 @@ const handleVendorStyles = async (ctx: PluginContext, path: string) => {
   }
 };
 
-
-export const rawImportSupport = () => {
+export const rawImportSupport = (ctx: PluginContext) => {
   return {
-    name: 'raw-import-support',
-    async load(id) {
-      if (id.endsWith('?raw')) {
-        const rawContent = await readFile(id.replace('?raw', ''), 'utf8');
-        return `export default \`${rawContent.replace(/`/g, '\\`')}\`;`;
+    name: "raw-import-support",
+    async load(id: string) {
+      if (id.includes("?raw")) {
+        const [path, query] = id.split("?");
+        const params = new URLSearchParams(query);
+        const encoding = (params.get("enconding") || "utf8") as BufferEncoding;
+
+        try {
+          const rawContent = await readFile(path, { encoding: encoding });
+          const escapedContent = rawContent
+            .replace(/\\/g, "\\\\") // Escape backslashes
+            .replace(/`/g, "\\`") // Escape backticks
+            .replace(/\$/g, "\\$"); // Escape dollar signs
+
+          return `export default \`${escapedContent}\`;`;
+        } catch (error: any) {
+          if (error.code === "ENOENT") {
+            return null;
+          }
+
+          ctx.error(error);
+        }
       }
-    }
-  }
+    },
+  };
 };
