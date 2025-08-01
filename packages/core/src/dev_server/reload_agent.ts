@@ -4,7 +4,7 @@ const maxRetries = 5;
 const retryDelay = 1000;
 
 const connect = () => {
-  event = new EventSource(`http://localhost:3000/events/`);
+  event = new EventSource(`http://${window.location.host}/events/`);
 
   event.addEventListener("open", () => {
     console.info("[Dev Server]: Connected!");
