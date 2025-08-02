@@ -21,6 +21,7 @@ export default defineConfig({
     plugins: [groupIconVitePlugin()],
   },
   // https://vitepress.dev/reference/default-theme-config
+  head: [["link", { rel: "icon", href: "/thy-weaver/logo.svg" }]],
   themeConfig: {
     search: {
       provider: "local",
