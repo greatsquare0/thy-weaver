@@ -49,7 +49,7 @@ weaver build
 Not implemented yet
 :::
 
-Builds the game, copies `media/` and then packages everything into a `.zip`
+Builds the game, copies `media/` and then packages everything into a `.zip` at `dist/`
 
 ```sh
 weaver package
