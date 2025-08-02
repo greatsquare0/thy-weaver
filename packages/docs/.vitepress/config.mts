@@ -26,6 +26,11 @@ export default defineConfig({
       provider: "local",
     },
 
+    footer: {
+      message:
+        "Release under MIT license. \n This project is not affiliated or endorsed by Twine or The Interactive Fiction Technology Foundation",
+    },
+
     logo: "/logo.svg",
     nav: [
       { text: "Home", link: "/" },
