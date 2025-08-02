@@ -28,7 +28,7 @@ Each one will be explained in order bellow:
 
 ## `.vscode`
 
-The recommended IDE/Text editor for Thy Weaver is [VSCode](https://code.visualstudio.com/), this directory will have:
+The recommended IDE/Text editor for ThyWeaver is [VSCode](https://code.visualstudio.com/), this directory will have:
 
 - `settings.json` For configuring extension and other settings related to just this workspace
 - `extensions.json` For recommended extensions
@@ -68,4 +68,4 @@ Your package configuration, relevant to use NPM packages
 
 ## `thyweaver.config.js` or `.ts`
 
-Your configuration file for Thy Weaver, check-out the documentation [here](/reference/config-file)
+Your configuration file for ThyWeaver, check-out the documentation [here](/reference/config-file)

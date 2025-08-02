@@ -5,7 +5,7 @@ import {
 } from "vitepress-plugin-group-icons";
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: "Thy Weaver",
+  title: "ThyWeaver",
   description: "A toolkit for making Twine games",
   srcDir: "src/",
   outDir: "dist/",
