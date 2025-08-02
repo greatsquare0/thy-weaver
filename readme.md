@@ -46,7 +46,7 @@ You can consider this a "spiritual successor" (Event though, as far as I know, N
 
 ## How to use
 
-Check out the docs, [available here](https://github.com/greatsquare0/thy-weaver)
+Check out the docs, [available here](https://greatsquare0.github.io/thy-weaver/)
 
 ---
 
