@@ -8,11 +8,11 @@ hero:
   image: /logo.svg
   actions:
     - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
+      text: Getting started
+      link: /guide/getting-started
     - theme: alt
-      text: API Examples
-      link: /api-examples
+      text: Github
+      link: https://github.com/greatsquare0/thy-weaver
 
 features:
   - title: Feature A
