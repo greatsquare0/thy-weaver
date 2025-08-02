@@ -128,7 +128,7 @@ $ bun add -D @thy-weaver/core
 `@thy-weaver/core` is an ESM-only package, don't use `require()` to import it, and make sure your nearest `package.json` contains `"type": "module"`
 :::
 
-You can check-out the manual migration guide [here (WIP)](/guide/manual-migration) 
+You can check-out the manual migration guide [here](/guide/manual-migration) 
 
 
 ## File Structure
@@ -156,7 +156,7 @@ The `src/` directory is considered the **project root**. `.tweenode` is auto-gen
 
 Your story source files (`.twee`) go in under `src/story/`
 
-More details about the default file structure can be found [here (WIP)](/reference/default-file-structure)
+More details about the default file structure can be found [here](/reference/default-file-structure)
 
 
 ## The Config File
@@ -206,7 +206,7 @@ export default config;
 ```
 :::
 
-Consult the [Config Reference](/reference/config-file) for full details on all config options.
+Consult the [Config Reference (WIP)](/reference/config-file) for full details on all config options.
 
 When your are ready to ship your game, run the following command:
 

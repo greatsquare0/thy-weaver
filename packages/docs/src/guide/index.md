@@ -1,6 +1,9 @@
 ---
 title: Why?
 lang: en-US
+next:
+  text: Getting Started
+  link: /guide/getting-started
 ---
 
 # Why?

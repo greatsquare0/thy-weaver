@@ -9,7 +9,7 @@ hero:
   actions:
     - theme: brand
       text: Getting started
-      link: /guide/getting-started
+      link: /guide/index
     - theme: alt
       text: Github
       link: https://github.com/greatsquare0/thy-weaver

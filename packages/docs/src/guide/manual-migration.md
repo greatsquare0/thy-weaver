@@ -3,7 +3,7 @@ title: Manual Migration
 lang: en-US
 ---
 ::: warning
-Always backup your work! Be it making manual copies or, better yer, using git (If don't use git, start using it, here is a [helpfull guide](https://github.com/AhmedOsamaMath/git-basics))
+Always backup your work! Be it making manual copies or, better yet, using git (If don't use git, start using it, here is a [helpfull guide](https://github.com/AhmedOsamaMath/git-basics))
 :::
 
 # Migrating from ThyWeaver Legacy

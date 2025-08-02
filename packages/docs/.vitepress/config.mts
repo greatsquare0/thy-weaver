@@ -35,7 +35,7 @@ export default defineConfig({
     logo: { dark: "/logo_dark.svg", light: "/logo.svg" },
     nav: [
       { text: "Home", link: "/" },
-      { text: "Guide", link: "/guide/getting-started" },
+      { text: "Guide", link: "/guide/index" },
       { text: "Reference", link: "/reference/cli" },
     ],
 
@@ -74,7 +74,7 @@ export default defineConfig({
     },
 
     socialLinks: [
-      { icon: "github", link: "https://github.com/vuejs/vitepress" },
+      { icon: "github", link: "https://github.com/greatsquare0/thy-weaver" },
     ],
   },
 });
