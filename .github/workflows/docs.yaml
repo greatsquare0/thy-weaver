@@ -5,6 +5,8 @@ on:
     branches:
       - main
 
+  workflow_dispatch:
+
 concurrency:
   group: pages
   cancel-in-progress: false
@@ -36,7 +38,7 @@ jobs:
       pages: write
       id-token: write
     needs: changes
-    if: ${{steps.filter.outputs.docs == "true"}}
+    if: ${{steps.filter.outputs.docs == 'true'}}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo

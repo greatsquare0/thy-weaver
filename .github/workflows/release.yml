@@ -5,6 +5,8 @@ on:
     branches:
       - main
 
+  workflow_dispatch:
+
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
@@ -34,7 +36,7 @@ jobs:
       contents: write
       issues: write
       pull-requests: write
-    if: ${{steps.filter.outputs.changeset == "true"}}
+    if: ${{steps.filter.outputs.changeset == 'true'}}
     name: Release
     runs-on: ubuntu-latest
     steps:
