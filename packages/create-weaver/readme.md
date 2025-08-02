@@ -29,6 +29,8 @@ pnpm weaver setup
 pnpm weaver dev
 ```
 
+For more information check-out the [docs](https://github.com/greatsquare0/thy-weaver)
+
 ## License
 
 MIT
