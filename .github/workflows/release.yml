@@ -8,15 +8,34 @@ on:
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    if: github.repository == 'greatsquare0/thy-weaver'
+
+    outputs:
+      docs: ${{ steps.filter.outputs.changeset }}
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check if changeset folder changed
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            changesets:
+              - ".changeset/**"
+
   release:
     permissions:
       id-token: write # for provenance
       contents: write
       issues: write
       pull-requests: write
-
+    if: ${{steps.filter.outputs.changeset == "true"}}
     name: Release
-    if: github.repository == 'greatsquare0/thy-weaver'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
