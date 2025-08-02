@@ -38,7 +38,7 @@ jobs:
       pages: write
       id-token: write
     needs: changes
-    if: ${{steps.filter.outputs.docs == 'true'}}
+    if: ${{needs.changes.outputs.docs == 'true'}}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
