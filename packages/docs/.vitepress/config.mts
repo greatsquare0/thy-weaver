@@ -16,10 +16,14 @@ export default defineConfig({
       md.use(groupIconMdPlugin);
     },
   },
+
   vite: {
     plugins: [groupIconVitePlugin()],
   },
   themeConfig: {
+    search: {
+      provider: "local",
+    },
     // https://vitepress.dev/reference/default-theme-config
     logo: "/logo.svg",
     nav: [

@@ -15,11 +15,8 @@ hero:
       link: https://github.com/greatsquare0/thy-weaver
 
 features:
-  - title: Feature A
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature B
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature C
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+  - title: Fast
+    details: Enjoy quick rebuilds 
+  - title: Easy to use
+    details: Quickly scaffold a new game
 ---
-
