@@ -3,9 +3,9 @@
 layout: home
 
 hero:
-  name: "Thy Weaver"
+  name: "ThyWeaver"
   text: "A toolkit for making Twine games"
-  image: /logo.svg
+  image: { dark: "/logo_dark.svg", light: "/logo.svg" }
   actions:
     - theme: brand
       text: Getting started

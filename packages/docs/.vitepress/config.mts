@@ -5,7 +5,7 @@ import {
 } from "vitepress-plugin-group-icons";
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: "Thy Weaver",
+  title: "ThyWeaver",
   description: "A toolkit for making Twine games",
   srcDir: "src/",
   outDir: "dist/",
@@ -21,6 +21,7 @@ export default defineConfig({
     plugins: [groupIconVitePlugin()],
   },
   // https://vitepress.dev/reference/default-theme-config
+  head: [["link", { rel: "icon", href: "/thy-weaver/favicon.svg" }]],
   themeConfig: {
     search: {
       provider: "local",
@@ -31,7 +32,7 @@ export default defineConfig({
         "Release under MIT license. \n This project is not affiliated or endorsed by Twine or The Interactive Fiction Technology Foundation",
     },
 
-    logo: "/logo.svg",
+    logo: { dark: "/logo_dark.svg", light: "/logo.svg" },
     nav: [
       { text: "Home", link: "/" },
       { text: "Guide", link: "/guide/getting-started" },

@@ -177,10 +177,16 @@ const config = defineConfig({
   },
   bundler: {
     watcherDelay: 1000,
+    filesystem: {
+      projectFiles: {
+        entryPoint: "src/assets/app/index.js",
+      },
+    },
   },
 });
 
 export default config;
+
 ```
 ```ts [thyweaver.config.ts]
 import { defineConfig } from "@thy-weaver/core";
