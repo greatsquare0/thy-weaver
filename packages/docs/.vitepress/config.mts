@@ -20,9 +20,14 @@ export default defineConfig({
   vite: {
     plugins: [groupIconVitePlugin()],
   },
+  lastUpdated: true,
   // https://vitepress.dev/reference/default-theme-config
   head: [["link", { rel: "icon", href: "/thy-weaver/favicon.svg" }]],
   themeConfig: {
+    editLink: {
+      pattern:
+        "https://github.com/greatsquare0/thy-weaver/edit/main/packages/docs/src/:path",
+    },
     search: {
       provider: "local",
     },
