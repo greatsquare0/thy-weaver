@@ -13,7 +13,7 @@ import type {
 
 import { loadConfig } from "./config/config_handler.ts";
 import { handleVendorFiles, rawImportSupport } from "./rolldown_plugins.ts";
-import { fancyLogFormater } from "./utils.ts";
+import { fancyLogFormater, isTS, resolveToProjectRoot } from "./utils.ts";
 
 const config = await loadConfig();
 //const mode = process.env.NODE_ENV || "development";
@@ -43,12 +43,16 @@ const onLog = (
       break;
   }
 };
-
+console.log(isTS ? "tsconfig.json" : "jsconfig.json");
 export const setupRolldown = () => {
   return {
     onLog,
     input: resolve(cwd(), config.bundler.filesystem!.projectFiles!.entryPoint!),
-
+    resolve: {
+      tsconfigFilename: isTS
+        ? resolveToProjectRoot("tsconfig.json")
+        : resolveToProjectRoot("jsconfig.json"),
+    },
     plugins: [
       rawImportSupport(),
       // @ts-expect-error

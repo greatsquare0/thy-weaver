@@ -103,7 +103,7 @@ const handleVendorStyles = async (ctx: PluginContext, path: string) => {
   }
 };
 
-export const rawImportSupport = (ctx: PluginContext) => {
+export const rawImportSupport = () => {
   return {
     name: "raw-import-support",
     async load(id: string) {
@@ -125,7 +125,7 @@ export const rawImportSupport = (ctx: PluginContext) => {
             return null;
           }
 
-          ctx.error(error);
+          error(error);
         }
       }
     },

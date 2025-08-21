@@ -4,6 +4,7 @@ import { outputFile, type PathLike } from "fs-extra/esm";
 import { readFile, stat } from "node:fs/promises";
 import type { RollupLog } from "rolldown";
 import pico from "picocolors";
+import { existsSync } from "node:fs";
 
 export const tempFolderPath = () => {
   return resolve(cwd(), "node_modules", ".lib-weaver-temp");
@@ -133,3 +134,5 @@ export const devState: DevState = {
 export const updateState = (newValue: string) => {
   devState.html = newValue;
 };
+
+export const isTS = existsSync(resolveToProjectRoot("thyweaver.config.ts"));

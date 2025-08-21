@@ -3,7 +3,7 @@ import swc from "@swc/core";
 import { defaultConfig } from "./defaults.ts";
 import { randomUUID } from "node:crypto";
 import { writeFile, mkdir, rm } from "node:fs/promises";
-import { tempFolderPath } from "../utils.ts";
+import { isTS, resolveToProjectRoot, tempFolderPath } from "../utils.ts";
 import { resolve } from "node:path";
 import { existsSync } from "node:fs";
 import { pathToFileURL } from "node:url";
@@ -61,7 +61,6 @@ const loadTsConfig = async (_filepath: string, content: string) => {
 };
 
 const options: Partial<Options> = {
-  searchPlaces: ["thyweaver.config.ts", "thyweaver.config.js"],
   loaders: {
     ...defaultLoaders,
     ".ts": loadTsConfig,
@@ -69,7 +68,11 @@ const options: Partial<Options> = {
 };
 
 export const loadConfig = async () => {
-  const result = await lilconfig("weaver", options).search();
+  const result = await lilconfig("weaver", options).load(
+    isTS
+      ? resolveToProjectRoot("thyweaver.config.ts")
+      : resolveToProjectRoot("thyweaver.config.js"),
+  );
   return result!.config as ThyWevearOptions;
 };
 

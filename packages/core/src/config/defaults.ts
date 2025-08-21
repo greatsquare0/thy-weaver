@@ -3,6 +3,7 @@ import swc from "./swc_defaults.ts";
 import postcss from "./postcss_defaults.ts";
 import { resolve } from "node:path";
 import { tempFolderPath } from "../utils.ts";
+import { isTS } from "../utils.ts";
 
 export const defaultConfig: ThyWevearOptions = {
   devServer: {
@@ -18,7 +19,9 @@ export const defaultConfig: ThyWevearOptions = {
     filesystem: {
       dist: "dist/",
       projectFiles: {
-        entryPoint: "src/assets/app/index.ts",
+        entryPoint: isTS
+          ? "src/assets/app/index.ts"
+          : "src/assets/app/index.js",
         fontsDir: "src/assets/fonts/",
         mediaDir: "src/assets/media/",
         vendorFilesDir: "src/assets/vendor/",
