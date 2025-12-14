@@ -4,16 +4,19 @@ import { cwd } from "node:process";
 import postcss from "rollup-plugin-postcss";
 import { swc } from "rollup-plugin-swc3";
 //import url, { type RollupUrlOptions } from "@rollup/plugin-url";
+import yaml from '@rollup/plugin-yaml';
 import type {
   LogLevel,
   LogOrStringHandler,
   RolldownOptions,
   RollupLog,
 } from "rolldown";
+import { withFilter } from 'rolldown/filter';
 
 import { loadConfig } from "./config/config_handler.ts";
 import { handleVendorFiles, rawImportSupport } from "./rolldown_plugins.ts";
 import { fancyLogFormater, isTS, resolveToProjectRoot } from "./utils.ts";
+import { transform } from "@swc/core";
 
 //const mode = process.env.NODE_ENV || "development";
 
@@ -72,6 +75,10 @@ export const setupRolldown = async () => {
       }),
       handleVendorFiles(),
       swc(config.bundler.swc),
+      withFilter(
+        yaml(),
+        { transform: { id: /\.ya?ml$/ } }
+      )
     ],
   } as RolldownOptions;
 };
