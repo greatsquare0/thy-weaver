@@ -216,7 +216,7 @@ export default config;
 ```
 :::
 
-Consult the [Config Reference (WIP)](/reference/config-file) for full details on all config options.
+Consult the [Config File reference](/reference/config-file) for full details on all config options.
 
 When your are ready to ship your game, run the following command:
 

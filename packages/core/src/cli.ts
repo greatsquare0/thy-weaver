@@ -41,13 +41,13 @@ const bootstrap = async () => {
   program
     .command("setup")
     .description("Downloads tweego and storyformats")
-    .option("-c", "--clean-setup")
-    .action(async (options) => {
+    .option("-c, --clean-setup", "Delete .tweenode/ and set up from scratch")
+    .action(async (options: { cleanSetup?: boolean }) => {
       console.log(
         `\n${pico.bgMagenta(pico.bold(" ThyWeaver - Running setup "))}ㅤ\n`,
       );
       const startStamp = Date.now();
-      if (options.c) {
+      if (options.cleanSetup) {
         await rm(resolveToProjectRoot(".tweenode"), {
           recursive: true,
           force: true,

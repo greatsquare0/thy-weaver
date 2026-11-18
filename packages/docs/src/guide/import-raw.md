@@ -5,35 +5,39 @@ lang: en-US
 
 # Importing Raw Files
 
-Since you cannot use `fetch()` when opening a HTML file directly (As is traditional way of distributing a Twine game). ThyWeaver allows to import text files directly and bundle them inline directly using `?raw` keyword
+Twine games are usually played by opening the HTML file directly, where `fetch()` can't load local files. Instead, ThyWeaver lets you import text files with the `?raw` suffix, and bundles their content inline as a string:
 
-```json [file.json]
+```json [src/assets/app/data/items.json]
 {
   "test": "lorem ipsum"
 }
 ```
 
-```js 
-import rawJson from 'src/assets/path/to/file.json?raw'
+```js [src/assets/app/index.js]
+import rawJson from "./data/items.json?raw";
 
+const items = JSON.parse(rawJson);
 ```
-This will be compiled as such in your output code:
+
+This is compiled to:
 
 ```js
-//#region src/assets/path/to/file.json?raw
+//#region src/assets/app/data/items.json?raw
 var rawJson = `{
   "test": "lorem ipsum"
 }
 `;
 //#endregion
 ```
-This is similar to Vite's implementation, but doesn't support bundling images (Other than `.svg`) this way
 
-By default, the bundler will assume the file is encoded as `UTF-8`, if you find a problem with a file that for some reason, is in other encoding, try using the `?enconding` keyword
+This is similar to Vite's `?raw`, but binary files like images can't be bundled this way (text based ones like `.svg` work). Put them in [`media/`](/reference/default-file-structure#src-assets) instead.
 
-```js 
-import rawJson from 'src/assets/path/to/file.json?raw?enconding=latin1'
+## Encoding
 
+Files are read as `UTF-8` by default. If a file uses another encoding, add `&encoding=` with the one to use:
+
+```js
+import legacyText from "./data/old_save.txt?raw&encoding=latin1";
 ```
 
 The supported encodings are the same as [Node.js `fs.readFile()`](https://nodejs.org/api/fs.html#fspromisesreadfilepath-options):
@@ -49,6 +53,5 @@ type BufferEncoding =
   | "base64"
   | "latin1"
   | "binary"
-  | "hex"
-
+  | "hex";
 ```

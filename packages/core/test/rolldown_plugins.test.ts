@@ -43,6 +43,30 @@ describe("rawImportSupport", () => {
     expect(module.default).toBe("a `tick`, a \\ and ${not} interpolated");
   });
 
+  it.each([
+    "?raw&encoding=latin1",
+    "?raw?encoding=latin1",
+    // Misspelled name from older docs
+    "?raw&enconding=latin1",
+  ])("reads the file with the requested encoding (%s)", async (query) => {
+    const file = join(dir, "latin1.txt");
+    await writeFile(file, Buffer.from([0x63, 0x61, 0x66, 0xe9])); // "café" in latin1
+
+    expect(await load(`${file}${query}`)).toBe("export default `café`;");
+  });
+
+  it("defaults to utf8", async () => {
+    const file = join(dir, "utf8.txt");
+    await writeFile(file, "café", "utf8");
+
+    expect(await load(`${file}?raw`)).toBe("export default `café`;");
+  });
+
+  it("reports read errors other than a missing file", async () => {
+    // A folder can't be read as a file
+    await expect(load(`${dir}?raw`)).rejects.toThrow(/EISDIR/);
+  });
+
   it("returns null for missing files so other plugins can resolve them", async () => {
     expect(await load(`${join(dir, "missing.txt")}?raw`)).toBeNull();
   });

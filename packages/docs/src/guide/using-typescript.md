@@ -5,9 +5,16 @@ lang: en-US
 
 # Using TypeScript
 
-ThyWeaver supports writing your JS with TypeScript, and is the recommended way using it, you just need a `tsconfig.json` in your project root and, assuming you are using the [default file structure](/reference/default-file-structure), an entry point file named `index.ts` under `src/assets/app/`
+ThyWeaver supports writing your scripts in TypeScript, and it's the recommended way to use it. Pick the TypeScript addon in `create-weaver`, or set it up yourself in an existing project:
 
-`create-weaver` provide the following `tsconfig.json` when scaffolding:
+1. Name your config file `thyweaver.config.ts`, this is what tells ThyWeaver the project uses TypeScript
+2. Add a `tsconfig.json` to your project root (see below)
+3. Name your entry point `index.ts`, under `src/assets/app/` when using the [default file structure](/reference/default-file-structure)
+4. Install TypeScript for your editor's type checking: `pnpm add -D typescript`
+
+With a `thyweaver.config.ts`, the default entry point is `src/assets/app/index.ts` and the bundler resolves paths with your `tsconfig.json`. You can still import `.js` files from TypeScript.
+
+`create-weaver` provides the following `tsconfig.json` when scaffolding:
 
 ```json [tsconfig.json]
 {
@@ -43,7 +50,7 @@ ThyWeaver supports writing your JS with TypeScript, and is the recommended way u
 
 ## Using Vanilla JavaScript
 
-By default, the bundler will look for an `index.ts`, but, if you wish to use vanilla, you can, by telling it to look for `.js` file instead
+To use plain JavaScript, name your config `thyweaver.config.js`: the default entry point is then `src/assets/app/index.js`, and paths are resolved with `jsconfig.json`. `create-weaver` also sets the entry point explicitly, so it's easy to change:
 
 ```js{11-14} [thyweaver.config.js]
 import { defineConfig } from "@thy-weaver/core";

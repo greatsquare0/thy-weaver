@@ -112,9 +112,16 @@ export const rawImportSupport = () => {
     name: "raw-import-support",
     async load(id: string) {
       if (id.includes("?raw")) {
-        const [path, query] = id.split("?");
-        const params = new URLSearchParams(query);
-        const encoding = (params.get("enconding") || "utf8") as BufferEncoding;
+        const queryStart = id.indexOf("?");
+        const path = id.slice(0, queryStart);
+        // Accept both `?raw&encoding=x` and `?raw?encoding=x`
+        const params = new URLSearchParams(
+          id.slice(queryStart + 1).replaceAll("?", "&"),
+        );
+        const encoding = (params.get("encoding") ||
+          // Misspelled name from older docs, still accepted
+          params.get("enconding") ||
+          "utf8") as BufferEncoding;
 
         try {
           const rawContent = await readFile(path, { encoding: encoding });
@@ -129,7 +136,7 @@ export const rawImportSupport = () => {
             return null;
           }
 
-          error(error);
+          throw error;
         }
       }
     },
