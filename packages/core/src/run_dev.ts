@@ -1,5 +1,10 @@
 import { loadConfig } from "./config/config_handler.ts";
-import { resolveToProjectRoot, updateState } from "./utils.ts";
+import type { RollupLog } from "rolldown";
+import {
+  fancyLogFormater,
+  resolveToProjectRoot,
+  updateState,
+} from "./utils.ts";
 import pico from "picocolors";
 import { watch } from "chokidar";
 import { startServer } from "./dev_server/main.ts";
@@ -59,10 +64,20 @@ export const runDev = async () => {
     process.stdout.write("\x1Bc");
     printBanner();
 
-    const result = await devBuilder();
-    if (result) {
-      updateState(result);
-      await broadcast("update");
+    // An error here would be an unhandled rejection and stop the dev server
+    try {
+      const result = await devBuilder();
+      if (result) {
+        updateState(result);
+        await broadcast("update");
+      }
+    } catch (error) {
+      console.error(
+        fancyLogFormater("DEV SERVER", "ERROR", {
+          message: "Rebuild failed, waiting for the next change",
+          cause: error,
+        } as RollupLog),
+      );
     }
 
     printWaiting();

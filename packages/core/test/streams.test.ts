@@ -40,4 +40,22 @@ describe("dev server streams", () => {
   it("works with no clients connected", async () => {
     await expect(broadcast("update")).resolves.toBeUndefined();
   });
+
+  it("drops a client whose push fails, without rejecting", async () => {
+    const broken = fakeStream();
+    broken.push.mockRejectedValue(new Error("closed"));
+    const healthy = fakeStream();
+    addStream(broken);
+    addStream(healthy);
+
+    await expect(broadcast("update")).resolves.toBeUndefined();
+    // Let the failed push settle
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    await broadcast("again");
+    expect(broken.push).toHaveBeenCalledTimes(1);
+    expect(healthy.push).toHaveBeenLastCalledWith("again");
+
+    removeStream(healthy);
+  });
 });

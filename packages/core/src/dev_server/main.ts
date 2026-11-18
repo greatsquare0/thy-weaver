@@ -3,7 +3,7 @@ import { loadConfig } from "../config/config_handler.ts";
 import { readFile, stat } from "node:fs/promises";
 import { join } from "node:path";
 import { devState, resolveToProjectRoot } from "../utils.ts";
-import { addStream, broadcast, removeStream } from "./streams.ts";
+import { addStream, removeStream } from "./streams.ts";
 import { getPluginManager } from "../plugins/manager.ts";
 import { findStaticAsset, resolveStaticMounts } from "../static_assets.ts";
 
@@ -118,11 +118,12 @@ const startServer = async (): Promise<ReturnType<typeof serve>> => {
     const eventStream = createEventStream(event);
     addStream(eventStream);
 
-    await broadcast("Test message");
-
     eventStream.onClosed(() => {
       removeStream(eventStream);
     });
+
+    // Greets only the new page (not awaited, nothing reads the stream yet)
+    eventStream.push("Test message").catch(() => removeStream(eventStream));
 
     return eventStream.send();
   });

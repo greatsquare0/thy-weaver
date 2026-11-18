@@ -11,12 +11,13 @@ export const removeStream = (stream: EventStream) => {
   clients.delete(stream);
 };
 
+/**
+ * Sends `data` to every connected page, doing nothing when none is connected.
+ * Pushes aren't awaited so a slow or paused tab can't hold up rebuilds, and a
+ * failed one drops that tab instead of becoming an unhandled rejection
+ */
 export const broadcast = async (data: string) => {
-  const promises: Promise<any>[] = [];
-
   for (const stream of clients) {
-    promises.push(stream.push(data));
+    stream.push(data).catch(() => removeStream(stream));
   }
-
-  Promise.all(promises);
 };

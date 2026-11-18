@@ -110,6 +110,30 @@ describe("weaver dev", () => {
     expect(html).toMatch(/<tw-storydata[^>]*options="debug"/);
   });
 
+  // Regression: 1.0.3 crashed on the first rebuild when no page was open
+  // (https://github.com/greatsquare0/thy-weaver/commit/929855d)
+  it("survives a rebuild with no page connected", async () => {
+    await project.write(
+      "src/story/Extra.twee",
+      ":: Extra\nAdded with no page open\n",
+    );
+
+    await waitFor(
+      async () => {
+        // A crashed server refuses connections, keep waiting for the message
+        const html = await fetch(`${server.url}/`)
+          .then((response) => response.text())
+          .catch(() => "");
+        return html.includes("Added with no page open");
+      },
+      30_000,
+      () => `rebuild never served:\n${server.output()}`,
+    );
+
+    expect(server.output()).not.toMatch(/TypeError|Unhandled|ERR_/);
+    expect((await fetch(`${server.url}/dev`)).status).toBe(200);
+  });
+
   it("rebuilds and notifies the page when a file changes", async () => {
     const events = await listen(`${server.url}/events/`);
     try {
