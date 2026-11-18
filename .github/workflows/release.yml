@@ -32,13 +32,14 @@ jobs:
 
   release:
     permissions:
-      id-token: write # for provenance
+      id-token: write # npm trusted publishing (OIDC) and provenance
       contents: write
       issues: write
       pull-requests: write
     needs:
       - changes
-    if: ${{ needs.changes.outputs.changesets == 'true' }}
+    # Manual runs retry a release (e.g. stage packages again) without a new changeset
+    if: ${{ needs.changes.outputs.changesets == 'true' || github.event_name == 'workflow_dispatch' }}
     name: Release
     runs-on: ubuntu-latest
     steps:
@@ -55,14 +56,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-turbo-
 
-      - name: Creating .npmrc
-        run: |
-          cat << EOF > "$HOME/.npmrc"
-            //registry.npmjs.org/:_authToken=$NPM_TOKEN
-          EOF
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
 
@@ -78,15 +71,20 @@ jobs:
       - name: Build
         run: pnpm run build
 
-      - name: Create Release Pull Request or Publish to npm
+      # `npm stage` needs npm 11.15+, the one bundled with Node 24 is newer
+      - name: Check npm version
+        run: npm --version
+
+      # No npm token: packages are staged through trusted publishing (OIDC) and
+      # only go live once a maintainer approves them with 2FA on npmjs.com.
+      # See scripts/stage-publish.mjs
+      - name: Create Release Pull Request or Stage on npm
         id: changesets
         uses: changesets/action@v1
         with:
           version: pnpm run ci:version
-          publish: pnpm publish -r --access public
+          publish: node scripts/stage-publish.mjs
           commit: "[chore] version bumped"
           title: "[chore] version bumped"
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_CONFIG_PROVENANCE: true

@@ -16,7 +16,7 @@
   },
   "bugs": "https://github.com/greatsquare0/thy-weaver/issues",
   "bin": {
-    "create-weaver": "./dist/index.js"
+    "create-weaver": "dist/index.js"
   },
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -27,8 +27,7 @@
   },
   "scripts": {
     "build": "tsdown --dts",
-    "dev": "tsdown --watch",
-    "create-weaver": "dist/index.js"
+    "dev": "tsdown --watch"
   },
   "keywords": [
     "Twine",
