@@ -1,7 +1,6 @@
 {
   "name": "@thy-weaver/plugin-executable",
-  "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0-beta.0",
   "description": "Packages ThyWeaver games as lightweight desktop apps (Neutralinojs), with saves synced to disk",
   "type": "module",
   "files": [
@@ -12,9 +11,14 @@
   "homepage": "https://github.com/greatsquare0/thy-weaver/tree/main/packages/plugin-executable",
   "repository": {
     "type": "git",
-    "url": "https://github.com/greatsquare0/thy-weaver/tree/main/packages/plugin-executable"
+    "url": "git+https://github.com/greatsquare0/thy-weaver.git",
+    "directory": "packages/plugin-executable"
   },
   "bugs": "https://github.com/greatsquare0/thy-weaver/issues",
+  "publishConfig": {
+    "access": "public",
+    "tag": "beta"
+  },
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -35,14 +39,17 @@
     "Weaver"
   ],
   "devDependencies": {
+    "@thy-weaver/core": "workspace:*",
     "@tsconfig/node24": "catalog:",
     "@types/node": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:"
   },
+  "peerDependencies": {
+    "@thy-weaver/core": "workspace:^"
+  },
   "dependencies": {
     "@electron/asar": "4.3.1",
-    "@thy-weaver/core": "workspace:*",
     "fflate": "0.8.2",
     "ora": "catalog:",
     "picocolors": "catalog:"

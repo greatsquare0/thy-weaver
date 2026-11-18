@@ -6,12 +6,23 @@
 <h1 align='center'>plugin-executable</h1>
 
 <p align='center'>
-  Experimental plugin for compiling games to executables
+  Plugin for compiling games to desktop executables (beta)
 </p>
 
 ---
 
-For more information check-out the [docs](https://greatsquare0.github.io/thy-weaver/) (WIP)
+> [!WARNING]
+> This plugin is in beta, its options may still change between releases
+
+For more information check-out the [docs](https://greatsquare0.github.io/thy-weaver/guide/plugin-executable)
+
+## Install
+
+Requires `@thy-weaver/core` 1.1 or newer:
+
+```bash
+pnpm add -D @thy-weaver/plugin-executable@beta
+```
 
 ## What it does
 

@@ -11,11 +11,12 @@
   "homepage": "https://github.com/greatsquare0/thy-weaver/tree/main/packages/create-weaver",
   "repository": {
     "type": "git",
-    "url": "https://github.com/greatsquare0/thy-weaver/tree/main/packages/create-weaver"
+    "url": "git+https://github.com/greatsquare0/thy-weaver.git",
+    "directory": "packages/create-weaver"
   },
   "bugs": "https://github.com/greatsquare0/thy-weaver/issues",
   "bin": {
-    "create-weaver": "./dist/index.js"
+    "create-weaver": "dist/index.js"
   },
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -26,8 +27,7 @@
   },
   "scripts": {
     "build": "tsdown --dts",
-    "dev": "tsdown --watch",
-    "create-weaver": "dist/index.js"
+    "dev": "tsdown --watch"
   },
   "keywords": [
     "Twine",
