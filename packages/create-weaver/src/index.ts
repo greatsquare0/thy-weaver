@@ -6,13 +6,8 @@
 import * as prompts from "@clack/prompts";
 import pico from "picocolors";
 import { existsSync } from "node:fs";
-import { basename, join, relative, resolve } from "node:path";
-import { cwd } from "node:process";
-// import mri from "mri";
-
-// const argv = mri(process.argv.slice(2));
-
-const defaultProjectName = "thyweaver-project";
+import { basename, relative, resolve } from "node:path";
+import { cwd, stdin, stdout } from "node:process";
 
 import pkg from "../package.json" with { type: "json" };
 import {
@@ -23,169 +18,220 @@ import {
   pkgManager,
   toValidPackageName,
 } from "./utils.ts";
-import { ADDONS, STORYFORMATS } from "./constants.ts";
+import { ADDONS, STORYFORMATS, type StoryformatVersion } from "./constants.ts";
 import { scaffold } from "./scaffold.ts";
+import {
+  CliError,
+  defaults,
+  helpMessage,
+  parseArgs,
+  type ExistingDirAction,
+} from "./cli.ts";
 
-const init = async () => {
+/**
+ * Thrown when the user cancels a prompt, ends the run quietly
+ */
+class Cancelled extends Error {}
+
+const ask = <T>(value: T): Exclude<T, symbol> => {
+  if (prompts.isCancel(value)) throw new Cancelled();
+  return value as Exclude<T, symbol>;
+};
+
+const init = async (args: string[]) => {
+  const options = parseArgs(args);
+
+  if (options.help) {
+    console.log(helpMessage);
+    return;
+  }
+
+  if (options.version) {
+    console.log(pkg.version);
+    return;
+  }
+
+  const interactive =
+    options.interactive ?? Boolean(stdin.isTTY && stdout.isTTY);
+
   prompts.intro(pico.bgMagenta(` ${pico.bold(pkg.name)} `));
-  //const argTargetDir = argv._[0] ? formatTargetDir(argv._[0]) : undefined;
 
-  const cancel = () => prompts.cancel();
+  //#region Project name and target dir
 
-  //#region Get project name and target dir
+  let targetDir = options.targetDir;
 
-  const projectName = await prompts.text({
-    message: "Project name:",
-    defaultValue: defaultProjectName,
-    placeholder: defaultProjectName,
-    validate: (value) => {
-      return !value || formatTargetDir(value).length > 0
-        ? undefined
-        : "Invalid project name";
-    },
-  });
+  if (targetDir === undefined && interactive) {
+    targetDir = formatTargetDir(
+      ask(
+        await prompts.text({
+          message: "Project name:",
+          defaultValue: defaults.targetDir,
+          placeholder: defaults.targetDir,
+          validate: (value) =>
+            !value || formatTargetDir(value).length > 0
+              ? undefined
+              : "Invalid project name",
+        }),
+      ),
+    );
+  }
 
-  if (prompts.isCancel(projectName)) return cancel();
-  const targetDir = formatTargetDir(projectName);
+  targetDir ??= defaults.targetDir;
+  const root = resolve(cwd(), targetDir);
 
   //#endregion
-  //#region Handle directory if exisit and not enpty
+  //#region Existing, non empty, target dir
 
-  if (existsSync(targetDir) && !isEmpty(targetDir)) {
-    const overwrite = await prompts.select({
-      message:
-        (targetDir === "."
-          ? "Current directory"
-          : `Target directory "${targetDir}`) +
-        " is not empty. Please choose how to proceed:",
-      options: [
-        { label: "Cancel operation", value: "no" },
-        { label: "Remove existing files and continue", value: "yes" },
-        { label: "Ignore files and continue", value: "ignore" },
-      ],
-    });
+  if (existsSync(root) && !isEmpty(root)) {
+    const where =
+      root === cwd() ? "Current directory" : `Target directory "${targetDir}"`;
 
-    if (prompts.isCancel(projectName)) return cancel();
+    let action: ExistingDirAction | "cancel" | undefined = options.existing;
 
-    switch (overwrite) {
-      case "yes":
-        emptyDir(targetDir);
-        break;
+    if (action === undefined) {
+      if (!interactive) {
+        throw new CliError(
+          `${where} is not empty. Pass --overwrite to remove its files, ` +
+            `or --ignore-existing to scaffold over them`,
+        );
+      }
 
-      case "no":
-        cancel();
-        return;
-
-      default:
-        break;
+      action = ask(
+        await prompts.select<ExistingDirAction | "cancel">({
+          message: `${where} is not empty. Please choose how to proceed:`,
+          options: [
+            { label: "Cancel operation", value: "cancel" },
+            { label: "Remove existing files and continue", value: "remove" },
+            { label: "Ignore files and continue", value: "ignore" },
+          ],
+        }),
+      );
     }
+
+    if (action === "cancel") throw new Cancelled();
+    if (action === "remove") emptyDir(root);
   }
 
   //#endregion
-  //#region Get package name
+  //#region Package name
 
-  let packageName = basename(resolve(targetDir));
+  let packageName = options.packageName ?? basename(root);
+
   if (!isValidPackageName(packageName)) {
-    const result = await prompts.text({
-      message: "Package name:",
-      defaultValue: toValidPackageName(packageName),
-      placeholder: toValidPackageName(packageName),
-      validate(value) {
-        if (value && !isValidPackageName(value)) {
-          return "Invalid package.json name";
-        }
-      },
-    });
+    const suggestion = toValidPackageName(packageName);
 
-    if (prompts.isCancel(result)) return cancel();
-    packageName = result;
+    packageName = interactive
+      ? ask(
+          await prompts.text({
+            message: "Package name:",
+            defaultValue: suggestion,
+            placeholder: suggestion,
+            validate: (value) =>
+              value && !isValidPackageName(value)
+                ? "Invalid package.json name"
+                : undefined,
+          }),
+        )
+      : suggestion;
   }
 
   //#endregion
-  //#region Choose storyformat
+  //#region Story format
 
-  const storyFormat = await prompts.select({
-    message: "Select a storyformat:",
-    options: STORYFORMATS.map((format) => {
-      const colorize = format.color;
+  let storyFormatVersion: StoryformatVersion | undefined =
+    options.storyFormatVersion;
 
-      return {
-        label: colorize(format.display || format.id),
-        value: format,
-      };
-    }),
-  });
-
-  if (prompts.isCancel(storyFormat)) return cancel();
-
-  let storyFormatVersion;
-  if (storyFormat.version!.length > 1) {
-    const version = await prompts.select({
-      message: "Select the storyformat version:",
-      options: storyFormat.version!.map((entry) => {
-        const colorize = entry.color;
-
-        return {
-          label: `v${entry.version} \t ${colorize(entry.display || entry.id)}`,
-          value: entry,
-        };
+  if (!storyFormatVersion && interactive) {
+    const storyFormat = ask(
+      await prompts.select({
+        message: "Select a storyformat:",
+        options: STORYFORMATS.map((format) => ({
+          label: format.color(format.display || format.id),
+          value: format,
+        })),
       }),
-    });
+    );
 
-    if (prompts.isCancel(version)) return cancel();
-    storyFormatVersion = version;
-  } else {
-    storyFormatVersion = storyFormat.version![0];
+    const versions = storyFormat.version ?? [];
+
+    storyFormatVersion =
+      versions.length > 1
+        ? ask(
+            await prompts.select({
+              message: "Select the storyformat version:",
+              options: versions.map((entry) => ({
+                label: `v${entry.version} \t ${entry.color(entry.display || entry.id)}`,
+                value: entry,
+              })),
+            }),
+          )
+        : versions[0];
   }
 
-  //#endregion
-  //#region Choose addons
-
-  const addons = await prompts.multiselect({
-    message: "Select addons:",
-    options: ADDONS.map((addon) => {
-      const colorize = addon.color;
-
-      return {
-        label:
-          colorize(addon.display || addon.id) +
-          (addon.tooltip ? pico.dim(` (${addon.tooltip})`) : ""),
-        value: addon,
-      };
-    }),
-    required: false,
-  });
-
-  if (prompts.isCancel(addons)) return cancel();
+  storyFormatVersion ??= defaults.storyFormatVersion;
 
   //#endregion
+  //#region Addons
 
-  const root = join(cwd(), targetDir);
+  let addons = options.addons;
+
+  if (!addons && interactive) {
+    addons = ask(
+      await prompts.multiselect({
+        message: "Select addons:",
+        options: ADDONS.map((addon) => ({
+          label:
+            addon.color(addon.display || addon.id) +
+            (addon.tooltip ? pico.dim(` (${addon.tooltip})`) : ""),
+          value: addon,
+        })),
+        required: false,
+      }),
+    );
+  }
+
+  addons ??= defaults.addons;
+
+  //#endregion
+
+  if (!interactive) {
+    prompts.log.info(
+      [
+        `Directory:    ${targetDir}`,
+        `Package name: ${packageName}`,
+        `Template:     ${storyFormatVersion.id}@${storyFormatVersion.version}`,
+        `Addons:       ${addons.map((addon) => addon.id).join(", ") || "none"}`,
+      ].join("\n"),
+    );
+  }
 
   scaffold({ root, packageName, storyFormatVersion, addons });
 
-  let doneMessage = "";
+  let doneMessage = `Done. Now run:\n`;
   const cdProjectName = relative(cwd(), root);
-  doneMessage += `Done. Now run:\n`;
   if (root !== cwd()) {
     doneMessage += `\n  cd ${
       cdProjectName.includes(" ") ? `"${cdProjectName}"` : cdProjectName
     }`;
   }
-  switch (pkgManager) {
-    case "yarn":
-      doneMessage += "\n  yarn";
-      doneMessage += "\n  yarn dev";
-      break;
-    default:
-      doneMessage += `\n  ${pkgManager} install`;
-      doneMessage += `\n  ${pkgManager} weaver setup`;
-      doneMessage += `\n  ${pkgManager} weaver dev`;
-      break;
-  }
+  // npm can't run package binaries directly, unlike pnpm, yarn and bun
+  const runBin = pkgManager === "npm" ? "npx" : pkgManager;
+  doneMessage += `\n  ${pkgManager} install`;
+  doneMessage += `\n  ${runBin} weaver setup`;
+  doneMessage += `\n  ${runBin} weaver dev`;
+
   prompts.outro(doneMessage);
 };
 
-init().catch((error) => {
-  console.error(error);
+init(process.argv.slice(2)).catch((error) => {
+  if (error instanceof Cancelled) {
+    prompts.cancel("Operation cancelled");
+  } else if (error instanceof CliError) {
+    prompts.log.error(error.message);
+    console.error(pico.dim(`\nRun with --help to see the available options`));
+  } else {
+    console.error(error);
+  }
+
+  process.exitCode = 1;
 });

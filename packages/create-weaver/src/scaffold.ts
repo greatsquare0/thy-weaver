@@ -1,18 +1,15 @@
 import {
-  cpSync,
   existsSync,
+  mkdirSync,
   readdirSync,
   readFileSync,
-  rmSync,
-  statSync,
   writeFileSync,
 } from "node:fs";
-import { basename, dirname, extname, join, resolve } from "node:path";
+import { dirname, join, posix, relative, sep } from "node:path";
 import { randomUUID } from "node:crypto";
-import { deepmerge } from "deepmerge-ts";
-import { globSync } from "tinyglobby";
+import { deepmergeCustom } from "deepmerge-ts";
 import { ADDONS, type Addon, type StoryformatVersion } from "./constants.ts";
-import { isEmpty, templatesDir } from "./utils.ts";
+import { templatesDir } from "./utils.ts";
 
 export interface ScaffoldOptions {
   /**
@@ -24,180 +21,274 @@ export interface ScaffoldOptions {
   addons: readonly Addon[];
 }
 
+type Flavour = "default" | "typescript";
+
 /**
- * Adds the addons other addons depend on (e.g. tailwind needs linting)
+ * The project, built in memory before anything touches the disk.
+ * Keys are posix paths relative to the project root
+ */
+export interface Project {
+  files: Map<string, Buffer>;
+  /**
+   * Folders that must exist even when empty (they hold a `.gitkeep` in the template)
+   */
+  dirs: Set<string>;
+}
+
+/**
+ * Adds the addons other addons depend on (e.g. tailwind needs linting),
+ * placing each requirement before the addon that needs it so it is applied first
  */
 export const resolveAddons = (addons: readonly Addon[]): Addon[] => {
-  const result = [...addons];
+  const result: Addon[] = [];
 
-  for (const addon of addons) {
-    for (const id of addon.require ?? []) {
-      if (!result.some((entry) => entry.id === id)) {
-        const required = ADDONS.find((entry) => entry.id === id);
-        if (required) result.push(required);
-      }
+  const visit = (addon: Addon, path: string[] = []) => {
+    if (result.includes(addon)) return;
+    if (path.includes(addon.id)) {
+      throw new Error(
+        `Circular addon requirement: ${[...path, addon.id].join(" -> ")}`,
+      );
     }
-  }
 
+    for (const id of addon.require ?? []) {
+      const required = ADDONS.find((entry) => entry.id === id);
+      if (!required)
+        throw new Error(`Addon "${addon.id}" requires unknown addon "${id}"`);
+      visit(required, [...path, addon.id]);
+    }
+
+    result.push(addon);
+  };
+
+  for (const addon of addons) visit(addon);
   return result;
 };
 
 /**
- * Copies the templates for the chosen story format and addons into `root`
+ * Template folders applied in order, later layers win (JSON files are merged).
+ *
+ * Every group (`base`, `formats/<id>`, `formats/<id>/<version>`, `addons/<id>`)
+ * uses the same layout: a `base/` (or `common/` for the root base) folder applied
+ * always, plus an optional `default/` or `typescript/` folder for the flavour
  */
-export const scaffold = ({
-  root,
-  packageName,
-  storyFormatVersion,
-  addons: selectedAddons,
-}: ScaffoldOptions) => {
-  const addons = resolveAddons(selectedAddons);
-  const isTS = addons.some((addon) => addon.id === "typescript");
+export const templateLayers = (
+  storyFormatVersion: StoryformatVersion,
+  addons: readonly Addon[],
+): string[] => {
+  const flavour: Flavour = addons.some((addon) => addon.id === "typescript")
+    ? "typescript"
+    : "default";
 
-  const templateBasePath = join(
-    templatesDir,
-    "base",
-    isTS ? "typescript" : "default",
-  );
+  const group = (...path: string[]) => [
+    join(templatesDir, ...path, "base"),
+    join(templatesDir, ...path, flavour),
+  ];
 
-  const templateFormatPath = join(
-    templatesDir,
-    "formats",
-    storyFormatVersion.id,
-  );
-  const templateConfigPath = join(templatesDir, "config");
-
-  //#region 1) Copy base
-
-  cpSync(templateBasePath, root, { recursive: true, force: true });
-  filterCopy(join(templatesDir, "base", "common"), root);
-
-  const toRemove = globSync("**/.gitkeep", { cwd: root, dot: true });
-  for (const file of toRemove) {
-    rmSync(resolve(root, file), { recursive: true, force: true });
-  }
-
-  cpSync(join(templateConfigPath, "vscode"), root, {
-    recursive: true,
-    force: true,
-  });
-  cpSync(join(templateConfigPath, "editorconfig"), root, {
-    recursive: true,
-    force: true,
-  });
-
-  //#endregion
-  //#region 2) Copy story format stuff
-
-  filterCopy(join(templateFormatPath, "base"), root);
-
-  const templateFormatVersionDir = join(
-    templateFormatPath,
-    storyFormatVersion.version.replaceAll(".", "_"),
-  );
-
-  if (existsSync(join(templateFormatVersionDir, "base"))) {
-    filterCopy(join(templateFormatVersionDir, "base"), root);
-
-    if (isTS && existsSync(join(templateFormatVersionDir, "typescript"))) {
-      filterCopy(join(templateFormatVersionDir, "typescript"), root);
-    }
-  }
-
-  //#endregion
-  //#region 3) Copy addon stuff
-
-  const templateAddonsDir = join(templatesDir, "addons");
-
-  for (const addon of addons) {
-    if (addon.id !== "typescript") {
-      if (existsSync(join(templateAddonsDir, addon.id, "base"))) {
-        filterCopy(join(templateAddonsDir, addon.id, "base"), root);
-        cpSync(
-          join(templateAddonsDir, addon.id, isTS ? "typescript" : "default"),
-          root,
-          { recursive: true, force: true },
-        );
-      } else {
-        filterCopy(join(templateAddonsDir, addon.id), root);
-      }
-    }
-  }
-
-  //#endregion
-  //#region 4) Last touches
-
-  editFile(resolve(root, "package.json"), (content) => {
-    return content.replace(
-      `"name": "thyweaver-base"`,
-      `"name": "${packageName}"`,
-    );
-  });
-
-  editFile(resolve(root, "src/story/StoryData.twee"), (content) => {
-    return content.replace("{{ifid}}", randomUUID().toUpperCase());
-  });
-
-  //#endregion
+  return [
+    join(templatesDir, "base", "common"),
+    join(templatesDir, "base", flavour),
+    ...group("formats", storyFormatVersion.id),
+    ...group("formats", storyFormatVersion.id, storyFormatVersion.version),
+    ...addons.flatMap((addon) => group("addons", addon.id)),
+  ].filter((dir) => existsSync(dir));
 };
 
 /**
- * Copies `src` into `dest`, merging .json files that already exist and
- * renaming `_name` files to `.name` (npm drops dotfiles when publishing)
+ * Builds the project for the chosen story format and addons, without writing it
  */
-export const filterCopy = (src: string, dest: string) => {
-  for (const file of readdirSync(src, { recursive: true, encoding: "utf-8" })) {
-    const srcFile = resolve(src, file);
-    const destFile = resolve(dest, file);
+export const renderProject = ({
+  packageName,
+  storyFormatVersion,
+  addons: selectedAddons,
+}: Omit<ScaffoldOptions, "root">): Project => {
+  const addons = resolveAddons(selectedAddons);
+  const isTS = addons.some((addon) => addon.id === "typescript");
 
-    const srcStat = statSync(srcFile);
+  if (!existsSync(join(templatesDir, "formats", storyFormatVersion.id))) {
+    throw new Error(
+      `No template found for story format "${storyFormatVersion.id}"`,
+    );
+  }
 
-    if (srcStat.isDirectory() && isEmpty(srcFile)) {
-      cpSync(srcFile, destFile, { force: true, recursive: true });
+  const project: Project = { files: new Map(), dirs: new Set() };
+
+  for (const layer of templateLayers(storyFormatVersion, addons)) {
+    applyLayer(project, layer);
+  }
+
+  editJson(project, "package.json", (pkg) => ({ ...pkg, name: packageName }));
+
+  project.files.set(
+    `thyweaver.config.${isTS ? "ts" : "js"}`,
+    Buffer.from(renderConfig({ isTS, addons })),
+  );
+
+  project.files.set(
+    "src/story/StoryData.twee",
+    Buffer.from(renderStoryData(storyFormatVersion)),
+  );
+
+  return project;
+};
+
+/**
+ * Writes the project for the chosen story format and addons into `root`.
+ * Files already in `root` that the template doesn't produce are left alone
+ */
+export const scaffold = ({ root, ...options }: ScaffoldOptions) => {
+  // Render first, so a broken template never leaves a half written project
+  const project = renderProject(options);
+
+  for (const dir of project.dirs) {
+    mkdirSync(join(root, dir), { recursive: true });
+  }
+
+  for (const [file, content] of project.files) {
+    const dest = join(root, file);
+    mkdirSync(dirname(dest), { recursive: true });
+    writeFileSync(dest, content);
+  }
+
+  return project;
+};
+
+/**
+ * Adds a template folder on top of the project:
+ * - `_name` files become `.name` (npm drops some dotfiles when publishing)
+ * - `.gitkeep` files only mark their folder as needed
+ * - `.json` files are deep merged into the existing ones, other files replace them
+ */
+export const applyLayer = (project: Project, layerDir: string) => {
+  const entries = readdirSync(layerDir, {
+    recursive: true,
+    withFileTypes: true,
+  });
+
+  for (const entry of entries) {
+    if (!entry.isFile()) continue;
+
+    const srcFile = join(entry.parentPath, entry.name);
+    const relDir = relative(layerDir, entry.parentPath)
+      .split(sep)
+      .join(posix.sep);
+
+    if (entry.name === ".gitkeep") {
+      project.dirs.add(relDir);
+      continue;
     }
 
-    if (srcStat.isFile()) {
-      if (extname(srcFile) === ".json" && existsSync(destFile)) {
-        mergeJsonFromFiles(srcFile, destFile);
-      } else if (basename(srcFile).startsWith("_")) {
-        const newDest = join(
-          dirname(destFile),
-          basename(srcFile).replace("_", "."),
-        );
+    const name = entry.name.startsWith("_")
+      ? `.${entry.name.slice(1)}`
+      : entry.name;
+    const file = posix.join(relDir, name);
+    const content = readFileSync(srcFile);
+    const existing = project.files.get(file);
 
-        cpSync(srcFile, newDest, { force: true, recursive: true });
-      } else {
-        cpSync(srcFile, destFile, { force: true, recursive: true });
-      }
+    if (existing && file.endsWith(".json")) {
+      const merged = mergeJson(
+        parseJson(existing, `${file} (before ${srcFile})`),
+        parseJson(content, srcFile),
+      );
+      project.files.set(file, Buffer.from(stringifyJson(merged)));
+    } else {
+      project.files.set(file, content);
     }
   }
 };
 
-const mergeJsonFromFiles = (fromPath: string, intoPath: string) => {
-  let fromFile;
-  let intoRaw;
-  let fromRaw;
+/**
+ * Objects merge deeply, arrays are joined without repeated entries
+ */
+const mergeJson = deepmergeCustom({
+  mergeArrays: (values) => [...new Set(values.flat())],
+});
 
+const parseJson = (content: Buffer, source: string) => {
   try {
-    fromRaw = readFileSync(fromPath, { encoding: "utf-8" });
-    fromFile = JSON.parse(fromRaw);
+    return JSON.parse(content.toString("utf-8"));
   } catch (error) {
-    console.error(`Error parsing: ${fromPath}\n`, error, "\n\n" + fromRaw);
+    throw new Error(
+      `create-weaver template error: "${source}" must be plain JSON (no comments) to be merged`,
+      { cause: error },
+    );
   }
-
-  let intoFile;
-  try {
-    intoRaw = readFileSync(intoPath, { encoding: "utf-8" });
-    intoFile = JSON.parse(intoRaw);
-  } catch (error) {
-    console.error(`Error parsing: ${intoPath}\n`, error, "\n\n" + intoRaw);
-  }
-
-  const merged = JSON.stringify(deepmerge(intoFile, fromFile), null, 2);
-  writeFileSync(intoPath, merged, { encoding: "utf-8" });
 };
 
-const editFile = (file: string, callback: (content: string) => string) => {
-  const content = readFileSync(file, "utf-8");
-  writeFileSync(file, callback(content), "utf-8");
+const stringifyJson = (value: unknown) => JSON.stringify(value, null, 2) + "\n";
+
+const editJson = (
+  project: Project,
+  file: string,
+  edit: (value: Record<string, unknown>) => Record<string, unknown>,
+) => {
+  const content = project.files.get(file);
+  if (!content)
+    throw new Error(`create-weaver template error: missing "${file}"`);
+  project.files.set(
+    file,
+    Buffer.from(stringifyJson(edit(parseJson(content, file)))),
+  );
+};
+
+export const renderStoryData = (format: StoryformatVersion) => {
+  const data = {
+    ifid: randomUUID().toUpperCase(),
+    format: format.name,
+    "format-version": format.version,
+  };
+
+  return `:: StoryData\n${JSON.stringify(data, null, "\t")}\n`;
+};
+
+export const renderConfig = ({
+  isTS,
+  addons,
+}: {
+  isTS: boolean;
+  addons: readonly Addon[];
+}) => {
+  const plugins = addons.flatMap((addon) => addon.postcssPlugin ?? []);
+
+  const imports = [
+    `import { defineConfig } from "@thy-weaver/core";`,
+    ...plugins.map((plugin) => `import ${plugin.name} from "${plugin.from}";`),
+  ];
+
+  const bundler = [`    watcherDelay: 1000,`];
+
+  if (!isTS) {
+    bundler.push(
+      `    filesystem: {`,
+      `      projectFiles: {`,
+      `        entryPoint: "src/assets/app/index.js",`,
+      `      },`,
+      `    },`,
+    );
+  }
+
+  if (plugins.length > 0) {
+    bundler.push(
+      `    postcss: {`,
+      `      plugins: [${plugins.map((plugin) => `${plugin.name}()`).join(", ")}],`,
+      `    },`,
+    );
+  }
+
+  return [
+    ...imports,
+    ``,
+    `const config = defineConfig({`,
+    `  devServer: {`,
+    `    port: 3000,`,
+    `    restricToLocalhost: false,`,
+    `    twineDebug: false,`,
+    `  },`,
+    `  bundler: {`,
+    ...bundler,
+    `  },`,
+    `});`,
+    ``,
+    `export default config;`,
+    ``,
+  ].join("\n");
 };

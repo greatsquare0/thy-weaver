@@ -44,7 +44,6 @@
   "dependencies": {
     "@clack/prompts": "^1.9.0",
     "deepmerge-ts": "^8.0.2",
-    "mri": "^1.2.0",
     "picocolors": "catalog:",
     "tinyglobby": "catalog:"
   }

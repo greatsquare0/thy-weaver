@@ -1,5 +1,5 @@
 import { existsSync } from "node:fs";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { glob } from "tinyglobby";
@@ -25,9 +25,9 @@ const readJson = async (path: string) =>
   JSON.parse(await readFile(join(root, path), "utf8"));
 
 describe("resolveAddons", () => {
-  it("adds linting when tailwind is selected", () => {
+  it("adds linting when tailwind is selected, applying it first", () => {
     const ids = resolveAddons([addon("tailwind")]).map((entry) => entry.id);
-    expect(ids).toEqual(["tailwind", "linting"]);
+    expect(ids).toEqual(["linting", "tailwind"]);
   });
 
   it("does not duplicate addons already selected", () => {
@@ -156,6 +156,80 @@ describe("scaffold", () => {
       "utf8",
     );
     expect(css).toContain("tailwindcss");
+  });
+
+  it.each([
+    ["tailwind first", ["tailwind", "linting"] as const],
+    ["linting first", ["linting", "tailwind"] as const],
+  ])("keeps the tailwind prettier plugin last (%s)", async (_, ids) => {
+    scaffold({
+      root,
+      packageName: "order-game",
+      storyFormatVersion: sugarcube,
+      addons: ids.map(addon),
+    });
+
+    const prettierrc = await readJson(".prettierrc.json");
+    expect(prettierrc.plugins.at(-1)).toBe("prettier-plugin-tailwindcss");
+    expect(new Set(prettierrc.plugins).size).toBe(prettierrc.plugins.length);
+  });
+
+  it("does not repeat merged array entries", async () => {
+    scaffold({
+      root,
+      packageName: "dedupe-game",
+      storyFormatVersion: sugarcube,
+      addons: ADDONS,
+    });
+
+    const { recommendations } = await readJson(".vscode/extensions.json");
+    expect(new Set(recommendations).size).toBe(recommendations.length);
+    expect(recommendations).toContain("bradlc.vscode-tailwindcss");
+    expect(recommendations).toContain("EditorConfig.EditorConfig");
+  });
+
+  it("keeps the JS entry point when tailwind replaces the config", async () => {
+    scaffold({
+      root,
+      packageName: "js-tailwind",
+      storyFormatVersion: sugarcube,
+      addons: [addon("tailwind")],
+    });
+
+    const config = await readFile(join(root, "thyweaver.config.js"), "utf8");
+    expect(config).toContain(`entryPoint: "src/assets/app/index.js"`);
+    expect(config).toContain(`plugins: [tailwind()]`);
+  });
+
+  it("leaves unrelated files in an existing folder alone", async () => {
+    await mkdir(join(root, ".devcontainer"), { recursive: true });
+    await writeFile(join(root, ".devcontainer", "devcontainer.json"), "{}");
+    await writeFile(join(root, ".gitkeep"), "mine");
+
+    scaffold({
+      root,
+      packageName: "existing",
+      storyFormatVersion: sugarcube,
+      addons: [],
+    });
+
+    expect(await readFile(join(root, ".gitkeep"), "utf8")).toBe("mine");
+    expect(
+      await readFile(join(root, ".devcontainer", "devcontainer.json"), "utf8"),
+    ).toBe("{}");
+    expect(existsSync(join(root, "package.json"))).toBe(true);
+  });
+
+  it("writes nothing when the template can't be rendered", () => {
+    expect(() =>
+      scaffold({
+        root,
+        packageName: "broken",
+        storyFormatVersion: { ...sugarcube, id: "missing-format" },
+        addons: [],
+      }),
+    ).toThrow(/missing-format/);
+    expect(existsSync(root)).toBe(false);
   });
 
   it("writes valid JSON for every merged file", async () => {
