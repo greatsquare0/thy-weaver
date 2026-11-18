@@ -1,5 +1,6 @@
 {
   "name": "@thy-weaver/plugin-executable",
+  "private": true,
   "version": "0.0.0",
   "description": "Packages ThyWeaver games as lightweight desktop apps (Neutralinojs), with saves synced to disk",
   "type": "module",

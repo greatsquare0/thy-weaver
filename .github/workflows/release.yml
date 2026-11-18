@@ -15,7 +15,7 @@ jobs:
     if: github.repository == 'greatsquare0/thy-weaver'
 
     outputs:
-      docs: ${{ steps.filter.outputs.changeset }}
+      changesets: ${{ steps.filter.outputs.changesets }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
@@ -38,14 +38,14 @@ jobs:
       pull-requests: write
     needs:
       - changes
-    if: ${{needs.changes.outputs.changeset == 'true'}}
+    if: ${{ needs.changes.outputs.changesets == 'true' }}
     name: Release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
         with:
-          fetch-depht: 0
+          fetch-depth: 0
 
       - name: Cache turbo build setup
         uses: actions/cache@v4
