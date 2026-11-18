@@ -1,26 +1,20 @@
 import type { Plugin } from "@thy-weaver/core/plugin_helpers";
-import { runBunCompilation } from "./compile_commands.ts";
-import type { Build } from "bun";
+import { packageApp } from "./package_app.ts";
+import type { PluginExecutableOptions } from "./options.ts";
 
-export type Target = Build.Target;
-
-export interface PluginExecutableOptions {
-  windowTitle?: string;
-  windowsSpecific?: {
-    hideConsole?: boolean;
-  };
-  server?: {
-    port: number;
-  };
-}
+export type {
+  PluginExecutableOptions,
+  NeutralinoTarget,
+} from "./options.ts";
+export { NEUTRALINO_TARGETS } from "./options.ts";
 
 const COMPILE_MODE = "compile";
 
-export default function compilePlugin(
+export default function executablePlugin(
   options: PluginExecutableOptions = {},
 ): Plugin {
   return {
-    name: "executable-maker",
+    name: "executable",
     configureCli(program, context) {
       const buildCmd = program.commands.find((cmd) => cmd.name() === "build");
 
@@ -28,21 +22,17 @@ export default function compilePlugin(
         buildCmd
           .command(COMPILE_MODE)
           .description(
-            "Compiles and creates a standalone executable for the game",
+            "Builds the game and packages it as a desktop app (Neutralinojs)",
           )
           .action(async () => {
-            if (process.versions.bun) {
-              await context.runPipeline(COMPILE_MODE);
-            } else {
-              context.logger.error("Bun is required to make executables");
-            }
+            await context.runPipeline(COMPILE_MODE);
           });
       }
     },
     async buildEnd(context) {
       if (context.mode !== COMPILE_MODE) return;
 
-      await runBunCompilation(options, context);
+      await packageApp(options, context);
     },
   };
 }

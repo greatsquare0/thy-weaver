@@ -3,6 +3,9 @@ injectWorkspacePackages: false
 packages:
   - packages/*
 
+# Only install package versions published at least 7 days ago (in minutes, needs pnpm >= 10.16)
+minimumReleaseAge: 10080
+
 onlyBuiltDependencies:
   - "@parcel/watcher"
   - "@swc/core"
