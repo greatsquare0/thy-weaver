@@ -43,13 +43,9 @@ Builds the game and copies `media/` to `dist/`
 weaver build
 ```
 
-## `weaver build`
+## `weaver package`
 
-::: info
-Not implemented yet
-:::
-
-Builds the game, copies `media/` and then packages everything into a `.zip` at `dist/`
+Builds the game, copies `media/` and then packages everything in `dist/` into a `.zip` ready for release, saved at `dist/<name>-<version>.zip` (taken from your `package.json`)
 
 ```sh
 weaver package

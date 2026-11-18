@@ -5,6 +5,7 @@ const { version, description } = pkg;
 import pico from "picocolors";
 import { runBuild } from "./run_build.ts";
 import { runDev } from "./run_dev.ts";
+import { runPackage } from "./package_game.ts";
 import { rm } from "fs/promises";
 import { resolveToProjectRoot } from "./utils.ts";
 import { handleTweegoSetup } from "./build_commands.ts";
@@ -62,14 +63,12 @@ const bootstrap = async () => {
       );
     });
 
-  // program
-  //   .command("package")
-  //   .description(
-  //     "WIP - Build and package the project in to a .zip for distribution",
-  //   )
-  //   .action((_str) => {
-  //     console.log("WIP");
-  //   });
+  program
+    .command("package")
+    .description("Build the project and zip dist/ for distribution")
+    .action(async (_str) => {
+      await runPackage();
+    });
 
   await pluginManager.configureCli(program);
 

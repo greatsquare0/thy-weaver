@@ -214,6 +214,9 @@ importers:
       '@vitest/coverage-v8':
         specifier: ^5.1.0
         version: 5.1.0(vitest@5.1.0)
+      fflate:
+        specifier: 0.8.2
+        version: 0.8.2
       oxlint:
         specifier: ^1.93.0
         version: 1.93.0
@@ -253,6 +256,9 @@ importers:
       deepmerge-ts:
         specifier: ^8.0.2
         version: 8.0.2
+      fflate:
+        specifier: 0.8.2
+        version: 0.8.2
       fs-extra:
         specifier: ^11.4.1
         version: 11.4.1

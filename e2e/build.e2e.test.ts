@@ -1,4 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
+import { readFile } from "node:fs/promises";
+import { strFromU8, unzipSync } from "fflate";
 import { createProject, runWeaver, type TestProject } from "./helpers.ts";
 
 let project: TestProject | undefined;
@@ -152,13 +154,34 @@ export default defineConfig({
     expect(project.exists("dist/index.html")).toBe(false);
   });
 
+  it("packages dist/ into a zip", async () => {
+    project = await createProject();
+    const { name, version } = JSON.parse(await project.read("package.json"));
+    const archive = `dist/${name}-${version}.zip`;
+
+    const result = await runWeaver(project.root, ["package"]);
+    expect(result.code, result.output).toBe(0);
+    expect(project.exists(archive)).toBe(true);
+
+    const files = unzipSync(
+      new Uint8Array(await readFile(`${project.root}/${archive}`)),
+    );
+    expect(Object.keys(files).sort()).toEqual([
+      "index.html",
+      "media/favicon.svg",
+    ]);
+    expect(strFromU8(files["index.html"]!)).toBe(
+      await project.read("dist/index.html"),
+    );
+  });
+
   it("prints the version and the commands", async () => {
     project = await createProject({ withTweego: false });
 
     const result = await runWeaver(project.root, ["--help"]);
 
     expect(result.code).toBe(0);
-    for (const command of ["build", "dev", "setup"]) {
+    for (const command of ["build", "dev", "setup", "package"]) {
       expect(result.output).toContain(command);
     }
   });

@@ -62,6 +62,7 @@
     "chokidar": "^6.0.0",
     "commander": "^15.1.0",
     "deepmerge-ts": "^8.0.2",
+    "fflate": "0.8.2",
     "fs-extra": "^11.4.1",
     "h3": "^2.0.8",
     "lightningcss": "^1.33.0",

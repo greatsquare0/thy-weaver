@@ -29,6 +29,7 @@
     "@svitejs/changesets-changelog-github-compact": "^1.2.0",
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "^5.1.0",
+    "fflate": "0.8.2",
     "oxlint": "^1.93.0",
     "prettier": "^3.9.10",
     "turbo": "^2.11.10",
