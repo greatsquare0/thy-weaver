@@ -1,4 +1,3 @@
-//@ts-expect-error
 import postcssLightningcss from "postcss-lightningcss";
 //@ts-expect-error
 import postcssImport from "postcss-import";

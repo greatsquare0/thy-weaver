@@ -34,13 +34,13 @@
     "Weaver"
   ],
   "devDependencies": {
-    "@tsconfig/node22": "^22.0.2",
-    "@types/node": "^24.0.10",
-    "tsdown": "^0.12.9",
-    "typescript": "^5.6.3"
+    "@tsconfig/node24": "catalog:",
+    "@types/node": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:"
   },
   "dependencies": {
-    "@electron/asar": "3.4.1",
+    "@electron/asar": "4.3.1",
     "@thy-weaver/core": "workspace:*",
     "fflate": "0.8.2",
     "ora": "catalog:",

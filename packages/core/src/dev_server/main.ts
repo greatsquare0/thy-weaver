@@ -6,7 +6,7 @@ import { devState, resolveToProjectRoot } from "../utils.ts";
 import { addStream, broadcast, removeStream } from "./streams.ts";
 import { getPluginManager } from "../plugins/manager.ts";
 
-const app = new H3();
+const app: H3 = new H3();
 
 const placeholder = `
 <!DOCTYPE html>
@@ -19,7 +19,7 @@ const placeholder = `
 </body>
 </html>
 `;
-const startServer = async () => {
+const startServer = async (): Promise<ReturnType<typeof serve>> => {
   const config = await loadConfig();
   app.get("/", (_event) => {
     let html = devState.html ? devState.html : placeholder;

@@ -1,11 +1,11 @@
 {
-  "extends": "@tsconfig/node22/tsconfig.json",
+  "extends": "@tsconfig/node24/tsconfig.json",
   "compilerOptions": {
     "allowImportingTsExtensions": true,
     "noEmit": true,
     "emitDeclarationOnly": false,
     "resolveJsonModule": true
   },
-  "include": ["src/*", "types/*", "src/plugins/helpers.ts"],
+  "include": ["src/**/*", "types/*"],
   "exclude": ["dist"]
 }

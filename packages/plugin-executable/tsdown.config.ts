@@ -4,4 +4,5 @@ export default defineConfig({
   entry: ["./src/index.ts"],
   platform: "node",
   sourcemap: true,
+  fixedExtension: false,
 });

@@ -1,16 +1,16 @@
 import picocolors from "picocolors";
 import type { Formatter } from "picocolors/types.js";
 
-interface StoryformatVersion {
+export interface StoryformatVersion {
   id: string;
   version: string;
   display: string;
   color: Formatter;
 }
 
-type STORYFORMATS_ID = "sugarcube" | "chapbook" | "harlowe" | "custom";
+export type STORYFORMATS_ID = "sugarcube" | "chapbook" | "harlowe" | "custom";
 
-interface Storyformat {
+export interface Storyformat {
   id: STORYFORMATS_ID;
   display: string;
   color: Formatter;
@@ -70,9 +70,9 @@ export const STORYFORMATS: Readonly<Storyformat[]> = Object.freeze([
   // },
 ]);
 
-type ADDON_ID = "tailwind" | "typescript" | "linting";
+export type ADDON_ID = "tailwind" | "typescript" | "linting";
 
-interface ADDON {
+export interface Addon {
   id: ADDON_ID;
   display: string;
   color: Formatter;
@@ -80,7 +80,7 @@ interface ADDON {
   require?: string[];
 }
 
-export const ADDONS: Readonly<ADDON[]> = Object.freeze([
+export const ADDONS: Readonly<Addon[]> = Object.freeze([
   {
     id: "tailwind",
     display: "TailwindCSS",

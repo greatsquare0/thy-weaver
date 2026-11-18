@@ -7,9 +7,11 @@ import { swc } from "rollup-plugin-swc3";
 import type {
   LogLevel,
   LogOrStringHandler,
+  Plugin,
   RolldownOptions,
   RolldownPluginOption,
   RollupLog,
+  TransformResult,
 } from "rolldown";
 
 import { loadConfig } from "./config/config_handler.ts";
@@ -44,6 +46,25 @@ const onLog = (
   }
 };
 
+// Rolldown 1.x picks the module type from the file extension and no longer
+// bundles CSS itself, so a plugin that compiles styles into JS has to say so.
+export const asJsModule = (plugin: Plugin): Plugin => {
+  const transform = plugin.transform as (
+    ...args: unknown[]
+  ) => Promise<TransformResult> | TransformResult;
+
+  return {
+    ...plugin,
+    async transform(...args: unknown[]) {
+      const result = await transform.apply(this, args);
+      if (result && typeof result === "object") {
+        return { ...result, moduleType: "js" };
+      }
+      return result;
+    },
+  } as Plugin;
+};
+
 export const setupRolldown = async (
   extraPlugins: RolldownPluginOption[] = [],
 ) => {
@@ -59,20 +80,22 @@ export const setupRolldown = async (
     },
     plugins: [
       rawImportSupport(),
-      // @ts-expect-error
-      postcss({
-        module: false,
-        plugins: config.bundler.postcss!.plugins,
-        extract: true,
-        //sourceMap: mode === "development",
-        modules: false,
-        autoModules: false,
-        use: {
-          sass: {
-            silenceDeprecations: ["legacy-js-api"],
+      asJsModule(
+        // @ts-expect-error
+        postcss({
+          module: false,
+          plugins: config.bundler.postcss!.plugins,
+          extract: true,
+          //sourceMap: mode === "development",
+          modules: false,
+          autoModules: false,
+          use: {
+            sass: {
+              silenceDeprecations: ["legacy-js-api"],
+            },
           },
-        },
-      }),
+        }),
+      ),
       handleVendorFiles(),
       swc(config.bundler.swc),
       ...extraPlugins,

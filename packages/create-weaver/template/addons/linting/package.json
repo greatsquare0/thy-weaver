@@ -1,8 +1,8 @@
 {
   "devDependencies": {
-    "@prettier/plugin-oxc": "^0.0.4",
-    "oxlint": "^1.6.0",
-    "prettier": "^3.6.2",
-    "prettier-plugin-organize-imports": "^4.1.0"
+    "@prettier/plugin-oxc": "^0.2.3",
+    "oxlint": "^1.93.0",
+    "prettier": "^3.9.10",
+    "prettier-plugin-organize-imports": "^4.3.0"
   }
 }

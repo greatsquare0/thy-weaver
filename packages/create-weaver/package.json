@@ -36,14 +36,14 @@
     "Tweego"
   ],
   "devDependencies": {
-    "@tsconfig/node22": "^22.0.2",
-    "@types/node": "^24.0.10",
-    "tsdown": "^0.12.9",
-    "typescript": "^5.6.3"
+    "@tsconfig/node24": "catalog:",
+    "@types/node": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:"
   },
   "dependencies": {
-    "@clack/prompts": "^0.11.0",
-    "deepmerge-ts": "^7.1.5",
+    "@clack/prompts": "^1.9.0",
+    "deepmerge-ts": "^8.0.2",
     "mri": "^1.2.0",
     "picocolors": "catalog:",
     "tinyglobby": "catalog:"

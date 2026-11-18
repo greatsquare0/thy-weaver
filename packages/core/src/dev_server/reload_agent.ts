@@ -1,3 +1,5 @@
+/// <reference lib="dom" />
+
 let event: EventSource;
 let retryCount = 0;
 const maxRetries = 5;

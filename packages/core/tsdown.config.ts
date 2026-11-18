@@ -8,5 +8,6 @@ export default defineConfig({
     plugin_helpers: "./src/plugins/helpers.ts",
   },
   sourcemap: true,
+  fixedExtension: false,
   dts: true,
 });

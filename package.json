@@ -12,19 +12,29 @@
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
+    "test": "vitest run --project unit",
+    "test:watch": "vitest --project unit",
+    "test:e2e": "turbo build && vitest run --project e2e",
+    "test:all": "turbo build && vitest run",
+    "test:coverage": "vitest run --project unit --coverage",
+    "test:types": "tsc -p tsconfig.test.json",
     "ci:version": "changeset version",
     "ci:publish": "changeset publish"
   },
   "template-author": "greatsquare0",
   "license": "MIT",
   "devDependencies": {
-    "@changesets/cli": "^2.29.5",
-    "@prettier/plugin-oxc": "^0.0.4",
+    "@changesets/cli": "^3.0.3",
+    "@prettier/plugin-oxc": "^0.2.3",
     "@svitejs/changesets-changelog-github-compact": "^1.2.0",
-    "oxlint": "^1.6.0",
-    "prettier": "^3.6.2",
-    "turbo": "^2.5.4",
-    "typescript": "^5.6.3"
+    "@types/node": "catalog:",
+    "@vitest/coverage-v8": "^5.1.0",
+    "oxlint": "^1.93.0",
+    "prettier": "^3.9.10",
+    "turbo": "^2.11.10",
+    "typescript": "catalog:",
+    "vite": "^8.3.7",
+    "vitest": "^5.1.0"
   },
-  "packageManager": "pnpm@10.12.4"
+  "packageManager": "pnpm@12.19.0"
 }

@@ -2,7 +2,7 @@ import { chmod, cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { extname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import asar from "@electron/asar";
+import * as asar from "@electron/asar";
 import ora from "ora";
 import pico from "picocolors";
 import {
@@ -30,13 +30,13 @@ interface PackageData {
 /**
  * "@scope/My Game" -> "My-Game"
  */
-const toBinaryName = (name: string) =>
+export const toBinaryName = (name: string) =>
   name
     .replace(/^@[^/]+\//, "")
     .replace(/[^a-zA-Z0-9_-]+/g, "-")
     .replace(/^-+|-+$/g, "") || "game";
 
-const injectIntoHead = (html: string, snippet: string) => {
+export const injectIntoHead = (html: string, snippet: string) => {
   const headTag = /<head(\s[^>]*)?>/i;
   if (!headTag.test(html)) {
     throw new Error("Could not find <head> in the story HTML");
@@ -44,7 +44,7 @@ const injectIntoHead = (html: string, snippet: string) => {
   return html.replace(headTag, (tag) => `${tag}\n${snippet}\n`);
 };
 
-const createNeutralinoConfig = (
+export const createNeutralinoConfig = (
   options: PluginExecutableOptions,
   meta: {
     applicationId: string;
