@@ -9,6 +9,7 @@ import { existsSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 import type { ThyWevearOptions } from "./config_types.ts";
 import { deepmerge } from "deepmerge-ts";
+import { callHook, sortPlugins } from "../plugins/sort.ts";
 
 function stripDefineConfig(content: string): string {
   const importRegex =
@@ -88,6 +89,39 @@ const options: Partial<Options> = {
 
 const searcher = lilconfig("weaver", options);
 
+/**
+ * Lets plugins modify the config (`config` hook), then notifies them of the
+ * final one (`configResolved` hook)
+ */
+const applyPluginConfigHooks = async (
+  initial: ThyWevearOptions,
+): Promise<ThyWevearOptions> => {
+  const plugins = sortPlugins(initial.plugins ?? []);
+  let config = initial;
+
+  for (const plugin of plugins) {
+    const hook = plugin.config;
+    if (hook) {
+      const partial = await callHook(plugin, "config", () => hook(config));
+      if (partial) {
+        config = deepmerge(config, partial) as ThyWevearOptions;
+      }
+    }
+  }
+
+  // Plugins can't add or remove plugins through the config hook
+  config.plugins = initial.plugins;
+
+  for (const plugin of plugins) {
+    const hook = plugin.configResolved;
+    if (hook) {
+      await callHook(plugin, "configResolved", () => hook(config));
+    }
+  }
+
+  return config;
+};
+
 let configPromise: Promise<ThyWevearOptions> | null = null;
 
 export const loadConfig = async (): Promise<ThyWevearOptions> => {
@@ -102,7 +136,9 @@ export const loadConfig = async (): Promise<ThyWevearOptions> => {
         : resolveToProjectRoot("thyweaver.config.js"),
     );
 
-    return deepmerge(defaultConfig, result!.config) as ThyWevearOptions;
+    const merged = deepmerge(defaultConfig, result!.config) as ThyWevearOptions;
+
+    return applyPluginConfigHooks(merged);
   })();
 
   return configPromise;

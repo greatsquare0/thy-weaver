@@ -8,6 +8,7 @@ import type {
   LogLevel,
   LogOrStringHandler,
   RolldownOptions,
+  RolldownPluginOption,
   RollupLog,
 } from "rolldown";
 
@@ -43,7 +44,9 @@ const onLog = (
   }
 };
 
-export const setupRolldown = async () => {
+export const setupRolldown = async (
+  extraPlugins: RolldownPluginOption[] = [],
+) => {
   const config = await loadConfig();
 
   return {
@@ -72,6 +75,7 @@ export const setupRolldown = async () => {
       }),
       handleVendorFiles(),
       swc(config.bundler.swc),
+      ...extraPlugins,
     ],
   } as RolldownOptions;
 };

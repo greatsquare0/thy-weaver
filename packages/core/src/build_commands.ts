@@ -6,7 +6,7 @@ import {
   resolveToProjectRoot,
 } from "./utils.ts";
 import { setupTweego, tweenode } from "tweenode";
-import { rolldown } from "rolldown";
+import { rolldown, type RolldownPluginOption } from "rolldown";
 import { setupRolldown } from "./rolldown_setup.ts";
 import { loadConfig } from "./config/config_handler.ts";
 import pico from "picocolors";
@@ -39,7 +39,9 @@ export const handleTweegoSetup = async () => {
   }
 };
 
-export const runRolldownn = async () => {
+export const runRolldownn = async (
+  extraPlugins: RolldownPluginOption[] = [],
+) => {
   const config = await loadConfig();
 
   const spinner = ora({
@@ -56,7 +58,7 @@ export const runRolldownn = async () => {
   );
 
   const startStamp = Date.now();
-  const bundle = await rolldown(await setupRolldown());
+  const bundle = await rolldown(await setupRolldown(extraPlugins));
   await bundle.write({
     format: "esm",
     file: resolve(config.bundler.filesystem!.stagingDir!, "app.bundle.js"),

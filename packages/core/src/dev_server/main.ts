@@ -4,6 +4,7 @@ import { readFile, stat } from "node:fs/promises";
 import { join } from "node:path";
 import { devState, resolveToProjectRoot } from "../utils.ts";
 import { addStream, broadcast, removeStream } from "./streams.ts";
+import { getPluginManager } from "../plugins/manager.ts";
 
 const app = new H3();
 
@@ -102,6 +103,9 @@ const startServer = async () => {
 
     return eventStream.send();
   });
+
+  const pluginManager = await getPluginManager();
+  await pluginManager.configureDevServer(app);
 
   return serve(app, {
     port: config.devServer!.port,

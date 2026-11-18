@@ -8,8 +8,7 @@ import { runDev } from "./run_dev.ts";
 import { rm } from "fs/promises";
 import { resolveToProjectRoot } from "./utils.ts";
 import { handleTweegoSetup } from "./build_commands.ts";
-import { loadConfig } from "./config/config_handler.ts";
-import { createPluginManager } from "./plugins/manager.ts";
+import { getPluginManager } from "./plugins/manager.ts";
 
 const bootstrap = async () => {
   program
@@ -22,8 +21,7 @@ const bootstrap = async () => {
     )
     .version(version);
 
-  const config = await loadConfig();
-  const pluginManager = createPluginManager(config.plugins || [], config);
+  const pluginManager = await getPluginManager();
 
   program
     .command("build")
@@ -73,9 +71,9 @@ const bootstrap = async () => {
   //     console.log("WIP");
   //   });
 
-  pluginManager.registerCommands(program);
+  await pluginManager.configureCli(program);
 
-  program.parse();
+  await program.parseAsync();
 };
 
 bootstrap();

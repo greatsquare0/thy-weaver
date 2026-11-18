@@ -1,14 +1,15 @@
 import {
   colorizeEmiter,
   colorizeLabel,
-  loadConfig,
+  type BuildEndContext,
 } from "@thy-weaver/core/plugin_helpers";
 import { cp } from "node:fs/promises";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import ora from "ora";
 import pico from "picocolors";
-import { PluginExecutableOptions } from ".";
+import type { PluginExecutableOptions } from "./index.ts";
+
 const serverMainPath = resolve(
   fileURLToPath(import.meta.url),
   "../..",
@@ -20,27 +21,31 @@ const serverWorkerPath = resolve(
   "server/worker.ts",
 );
 
-export const runBunCompilation = async (options: PluginExecutableOptions) => {
+export const runBunCompilation = async (
+  options: PluginExecutableOptions,
+  { config, paths, html }: BuildEndContext,
+) => {
   const startStamp = Date.now();
-  const {
-    bundler: { filesystem },
-    devServer,
-  } = await loadConfig();
+  const { stagingDir, dist } = paths;
 
   const spinner = ora({
     prefixText: colorizeEmiter("PLUGIN"),
   });
 
-  const packageData = JSON.parse(await Bun.file("./package.json").text());
+  const packageData = JSON.parse(
+    await Bun.file(resolve(paths.root, "package.json")).text(),
+  );
 
   spinner.start("Copying server files");
-  await cp(serverMainPath, `${filesystem!.stagingDir!}/main.ts`);
-  await cp(serverWorkerPath, `${filesystem!.stagingDir!}/worker.ts`);
+  await cp(serverMainPath, resolve(stagingDir, "main.ts"));
+  await cp(serverWorkerPath, resolve(stagingDir, "worker.ts"));
+  // The worker embeds the story HTML at compile time
+  await Bun.write(resolve(stagingDir, "index.html"), html);
   await Bun.write(
-    `${filesystem!.stagingDir!}/config.json`,
+    resolve(stagingDir, "config.json"),
     JSON.stringify({
       title: options.windowTitle ? options.windowTitle : packageData.name,
-      port: options.server?.port ? options.server?.port : devServer?.port,
+      port: options.server?.port ? options.server?.port : config.devServer?.port,
       mediaPath: "/media",
     }),
   );
@@ -64,10 +69,10 @@ export const runBunCompilation = async (options: PluginExecutableOptions) => {
       },
 
       entrypoints: [
-        filesystem!.stagingDir! + "/main.ts",
-        filesystem!.stagingDir! + "/worker.ts",
+        resolve(stagingDir, "main.ts"),
+        resolve(stagingDir, "worker.ts"),
       ],
-      outdir: filesystem!.dist!,
+      outdir: dist,
       minify: true,
       sourcemap: true,
     });

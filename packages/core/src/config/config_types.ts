@@ -1,5 +1,5 @@
 import type { Config as SWCOptions } from "@swc/core";
-import type { Plugin } from "../plugins/helpers.ts";
+import type { Plugin } from "../plugins/types.ts";
 
 export interface AdditionalAsset {
   /**
