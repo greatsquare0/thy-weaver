@@ -21,6 +21,11 @@
     },
     "./types": {
       "types": "./types/index.d.ts"
+    },
+    "./plugin_helpers": {
+      "import": "./dist/plugin_helpers.js",
+      "require": "./dist/plugin_helpers.js",
+      "types": "./dist/plugin_helpers.d.ts"
     }
   },
   "files": [
@@ -41,38 +46,39 @@
   },
   "bugs": "https://github.com/greatsquare0/thy-weaver/issues",
   "devDependencies": {
-    "@prettier/plugin-oxc": "^0.0.4",
-    "@tsconfig/node22": "^22.0.2",
+    "@prettier/plugin-oxc": "^0.2.3",
+    "@tsconfig/node24": "catalog:",
     "@types/fs-extra": "^11.0.4",
-    "@types/node": "^24.0.10",
-    "oxlint": "^1.5.0",
-    "prettier": "^3.6.2",
-    "tsdown": "^0.12.9",
-    "typescript": "^5.8.3"
+    "@types/node": "catalog:",
+    "oxlint": "^1.93.0",
+    "prettier": "^3.9.10",
+    "tsdown": "catalog:",
+    "typescript": "catalog:"
   },
   "dependencies": {
     "@rollup/plugin-url": "^8.0.2",
-    "@swc/core": "^1.12.9",
-    "browserslist": "^4.25.1",
-    "chokidar": "^4.0.3",
-    "commander": "^14.0.0",
-    "deepmerge-ts": "^7.1.5",
-    "fs-extra": "^11.3.0",
-    "h3": "2.0.0-beta.1",
-    "lightningcss": "^1.30.1",
-    "lilconfig": "^3.1.3",
-    "ora": "^8.2.0",
-    "picocolors": "^1.1.1",
-    "postcss": "^8.5.6",
-    "postcss-import": "^16.1.1",
-    "postcss-lightningcss": "^1.0.1",
-    "postcss-loader": "^8.1.1",
+    "@swc/core": "^1.16.22",
+    "browserslist": "^4.29.5",
+    "chokidar": "^6.0.0",
+    "commander": "^15.1.0",
+    "deepmerge-ts": "^8.0.2",
+    "fflate": "0.8.2",
+    "fs-extra": "^11.4.1",
+    "h3": "^2.0.8",
+    "lightningcss": "^1.33.0",
+    "lilconfig": "^3.1.5",
+    "ora": "catalog:",
+    "picocolors": "catalog:",
+    "postcss": "^8.5.32",
+    "postcss-import": "^17.0.1",
+    "postcss-lightningcss": "^1.1.2",
+    "postcss-loader": "^8.2.1",
     "postcss-scss": "^4.0.9",
-    "rolldown": "1.0.0-beta.24",
+    "rolldown": "^1.3.1",
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-swc3": "^0.12.1",
-    "sass": "^1.89.2",
-    "tinyglobby": "^0.2.14",
+    "sass": "^1.108.1",
+    "tinyglobby": "catalog:",
     "tweenode": "^0.3.0"
   }
 }

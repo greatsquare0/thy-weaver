@@ -22,9 +22,7 @@ const swc: Config = {
           }
         : undefined,
   },
-  env: {
-    targets: "defaults",
-  },
+  // `env.targets` comes from `bundler.compilationTarget`, see resolve_config.ts
 };
 
 export default swc;

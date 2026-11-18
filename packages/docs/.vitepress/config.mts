@@ -62,6 +62,13 @@ export default defineConfig({
             { text: "Importing Raw Files", link: "/guide/import-raw" },
           ],
         },
+        {
+          text: "Plugins",
+          items: [
+            { text: "Writing Plugins", link: "/guide/writing-plugins" },
+            { text: "Desktop Executables", link: "/guide/plugin-executable" },
+          ],
+        },
       ],
       "/reference/": [
         {

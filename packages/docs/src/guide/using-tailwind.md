@@ -40,8 +40,8 @@ const config = defineConfig({
   bundler: {
     watcherDelay: 1000,
     postcss: {
-      plugins: [tailwindcss()]
-    }
+      plugins: [tailwindcss()],
+    },
     filesystem: {
       projectFiles: {
         entryPoint: "src/assets/app/index.js",
@@ -66,8 +66,8 @@ const config = defineConfig({
   bundler: {
     watcherDelay: 1000,
     postcss: {
-      plugins: [tailwindcss()]
-    }
+      plugins: [tailwindcss()],
+    },
   },
 });
 
@@ -78,7 +78,7 @@ export default config;
 And assuming you are using the [default file structure](/reference/default-file-structure), import Tailwind in your `main.css` file:
 
 ```css [src/assets/app/styles/main.css]
-@import 'tailwindcss'
+@import 'tailwindcss';
 ```
 
 ## Additional configuration

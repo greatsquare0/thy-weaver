@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const formatTargetDir = (targetDir: string) => {
-  return targetDir.trim().replace(/\/+$/g, "");
+  return targetDir.trim().replace(/(?<=.)[/\\]+$/g, "");
 };
 
 export const isValidPackageName = (projectName: string) => {

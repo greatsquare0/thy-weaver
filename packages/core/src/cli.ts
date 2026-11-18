@@ -5,66 +5,74 @@ const { version, description } = pkg;
 import pico from "picocolors";
 import { runBuild } from "./run_build.ts";
 import { runDev } from "./run_dev.ts";
+import { runPackage } from "./package_game.ts";
 import { rm } from "fs/promises";
 import { resolveToProjectRoot } from "./utils.ts";
 import { handleTweegoSetup } from "./build_commands.ts";
+import { getPluginManager } from "./plugins/manager.ts";
 
-program
-  .name("weaver")
-  .description(
-    "\t\t" +
-      pico.bgBlue(pico.bgMagenta(pico.bold("  Thy Weaver  "))) +
-      "\n" +
-      description,
-  )
-  .version(version);
+const bootstrap = async () => {
+  program
+    .name("weaver")
+    .description(
+      "\t\t" +
+        pico.bgBlue(pico.bgMagenta(pico.bold("  Thy Weaver  "))) +
+        "\n" +
+        description,
+    )
+    .version(version);
 
-program
-  .command("build")
-  .description("Build the project to dist/")
-  .action(async (_str) => {
-    await runBuild();
-  });
+  const pluginManager = await getPluginManager();
 
-program
-  .command("dev")
-  .description("Start the live dev environment")
-  .action(async (_str) => {
-    await runDev();
-  });
+  program
+    .command("build")
+    .description("Build the project to dist/")
+    .action(async (_str) => {
+      await runBuild();
+    });
 
-program
-  .command("setup")
-  .description("Downloads tweego and storyformats")
-  .option("-c", "--clean-setup")
-  .action(async (options) => {
-    console.log(
-      `\n${pico.bgMagenta(pico.bold(" ThyWeaver - Running setup "))}ㅤ\n`,
-    );
-    const startStamp = Date.now();
-    if (options.c) {
-      await rm(resolveToProjectRoot(".tweenode"), {
-        recursive: true,
-        force: true,
-      });
-    }
+  program
+    .command("dev")
+    .description("Start the live dev environment")
+    .action(async (_str) => {
+      await runDev();
+    });
 
-    await handleTweegoSetup();
+  program
+    .command("setup")
+    .description("Downloads tweego and storyformats")
+    .option("-c, --clean-setup", "Delete .tweenode/ and set up from scratch")
+    .action(async (options: { cleanSetup?: boolean }) => {
+      console.log(
+        `\n${pico.bgMagenta(pico.bold(" ThyWeaver - Running setup "))}ㅤ\n`,
+      );
+      const startStamp = Date.now();
+      if (options.cleanSetup) {
+        await rm(resolveToProjectRoot(".tweenode"), {
+          recursive: true,
+          force: true,
+        });
+      }
 
-    console.log(
-      `\n${pico.bgGreen(
-        pico.bold(` Setup finished in ${Date.now() - startStamp}ms `),
-      )}ㅤ\n`,
-    );
-  });
+      await handleTweegoSetup();
 
-program
-  .command("package")
-  .description(
-    "WIP - Build and package the project in to a .zip for distribution",
-  )
-  .action((_str) => {
-    console.log("WIP");
-  });
+      console.log(
+        `\n${pico.bgGreen(
+          pico.bold(` Setup finished in ${Date.now() - startStamp}ms `),
+        )}ㅤ\n`,
+      );
+    });
 
-program.parse();
+  program
+    .command("package")
+    .description("Build the project and zip dist/ for distribution")
+    .action(async (_str) => {
+      await runPackage();
+    });
+
+  await pluginManager.configureCli(program);
+
+  await program.parseAsync();
+};
+
+bootstrap();

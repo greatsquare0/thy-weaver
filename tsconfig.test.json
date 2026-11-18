@@ -1,0 +1,26 @@
+{
+  // Type-checks the tests, which no package tsconfig includes
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    // Same resolution as the packages (@tsconfig/node24)
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "lib": ["ES2024"],
+    "types": ["node"],
+    "resolveJsonModule": true,
+    "paths": {
+      "@thy-weaver/core/plugin_helpers": [
+        "./packages/core/src/plugins/helpers.ts"
+      ],
+      "@electron/asar": [
+        "./packages/plugin-executable/node_modules/@electron/asar/lib/asar.d.ts"
+      ]
+    }
+  },
+  "include": [
+    "vitest.config.ts",
+    "e2e/**/*.ts",
+    "packages/*/test/**/*.ts",
+    "packages/core/types/*"
+  ]
+}

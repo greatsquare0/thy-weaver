@@ -4,6 +4,7 @@ import { outputFile, type PathLike } from "fs-extra/esm";
 import { readFile, stat } from "node:fs/promises";
 import type { RollupLog } from "rolldown";
 import pico from "picocolors";
+import { existsSync } from "node:fs";
 
 export const tempFolderPath = () => {
   return resolve(cwd(), "node_modules", ".lib-weaver-temp");
@@ -46,7 +47,7 @@ export const win2posixPath = (path: string): string => {
   return normalize(path).replaceAll(sep, posix.sep);
 };
 
-type Emiters = "ROLLDOWN" | "TWEENODE" | "DEV SERVER" | "BUNDLER";
+type Emiters = "ROLLDOWN" | "TWEENODE" | "DEV SERVER" | "BUNDLER" | "PLUGIN";
 type LogLevel = "INFO" | "WARN" | "DEBUG" | "ERROR" | "PROGRESS";
 
 export const colorizeEmiter = (str: Emiters) => {
@@ -68,10 +69,16 @@ export const colorizeEmiter = (str: Emiters) => {
     case "TWEENODE":
       output = pico.bgCyan(pico.white(pico.bold(output)));
       break;
+    case "PLUGIN":
+      output = pico.bgCyanBright(pico.white(pico.bold(output)));
+      break;
   }
 
   if (str == "BUNDLER") {
     output = " " + output;
+  }
+  if (str == "PLUGIN") {
+    output = "  " + output;
   }
 
   return output;
@@ -115,8 +122,11 @@ export const fancyLogFormater = (
     `${emiterLabel} ${levelLabel == null ? "" : levelLabel} ${log.message}`,
   ];
 
+  // oxlint-disable-next-line no-unused-expressions
   log.cause ? result.push(`\n${log.cause}\n`) : null;
+  // oxlint-disable-next-line no-unused-expressions
   log.meta ? result.push(`\n${log.meta}\n`) : null;
+  // oxlint-disable-next-line no-unused-expressions
   log.stack ? result.push(`\n${log.stack}\n`) : null;
 
   return result.join("");
@@ -133,3 +143,5 @@ export const devState: DevState = {
 export const updateState = (newValue: string) => {
   devState.html = newValue;
 };
+
+export const isTS = existsSync(resolveToProjectRoot("thyweaver.config.ts"));

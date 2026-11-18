@@ -14,9 +14,9 @@ import { platform } from "node:os";
 import ora from "ora";
 import pico from "picocolors";
 
-const config = await loadConfig();
-
 export const handleVendorFiles = async () => {
+  const config = await loadConfig();
+
   return {
     name: "handle-vendor-files",
     async buildStart() {
@@ -48,6 +48,8 @@ export const handleVendorFiles = async () => {
 };
 
 const handleVendorScripts = async (ctx: PluginContext, path: string) => {
+  const config = await loadConfig();
+
   const pattern = path + "/**/*.{js,ts}";
 
   try {
@@ -73,6 +75,8 @@ const handleVendorScripts = async (ctx: PluginContext, path: string) => {
 };
 
 const handleVendorStyles = async (ctx: PluginContext, path: string) => {
+  const config = await loadConfig();
+
   const pattern = path + "/**/*.css";
 
   try {
@@ -103,14 +107,21 @@ const handleVendorStyles = async (ctx: PluginContext, path: string) => {
   }
 };
 
-export const rawImportSupport = (ctx: PluginContext) => {
+export const rawImportSupport = () => {
   return {
     name: "raw-import-support",
     async load(id: string) {
       if (id.includes("?raw")) {
-        const [path, query] = id.split("?");
-        const params = new URLSearchParams(query);
-        const encoding = (params.get("enconding") || "utf8") as BufferEncoding;
+        const queryStart = id.indexOf("?");
+        const path = id.slice(0, queryStart);
+        // Accept both `?raw&encoding=x` and `?raw?encoding=x`
+        const params = new URLSearchParams(
+          id.slice(queryStart + 1).replaceAll("?", "&"),
+        );
+        const encoding = (params.get("encoding") ||
+          // Misspelled name from older docs, still accepted
+          params.get("enconding") ||
+          "utf8") as BufferEncoding;
 
         try {
           const rawContent = await readFile(path, { encoding: encoding });
@@ -125,7 +136,7 @@ export const rawImportSupport = (ctx: PluginContext) => {
             return null;
           }
 
-          ctx.error(error);
+          throw error;
         }
       }
     },

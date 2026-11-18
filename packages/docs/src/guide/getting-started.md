@@ -56,6 +56,16 @@ The command will install and execute [`create-weaver`](https://github.com/greats
   
 ```
 
+::: tip Skipping the prompts
+Every option can be passed as an argument instead, useful for scripts, CI or devcontainers. Without a terminal (or with `--yes`) nothing is asked and defaults fill in the rest:
+
+```sh
+$ pnpm create weaver@latest my-game --template sugarcube --addons typescript,tailwind
+```
+
+Run `create-weaver --help` or see the [`create-weaver` readme](https://github.com/greatsquare0/thy-weaver/tree/main/packages/create-weaver#skipping-the-prompts) for every option
+:::
+
 Then, install dependencies:
 
 ::: code-group
@@ -77,7 +87,7 @@ The cli will be available as `weaver`, run the Tweego `setup` command next:
 ::: code-group
 
 ```sh [npm]
-$ npm weaver setup
+$ npx weaver setup
 ```
 ```sh [pnpm]
 $ pnpm weaver setup
@@ -93,7 +103,7 @@ And finally start in developer mode, a server will automatically make your proje
 ::: code-group
 
 ```sh [npm]
-$ npm weaver dev
+$ npx weaver dev
 ```
 ```sh [pnpm]
 $ pnpm weaver dev
@@ -206,14 +216,14 @@ export default config;
 ```
 :::
 
-Consult the [Config Reference (WIP)](/reference/config-file) for full details on all config options.
+Consult the [Config File reference](/reference/config-file) for full details on all config options.
 
 When your are ready to ship your game, run the following command:
 
 ::: code-group
 
 ```sh [npm]
-$ npm weaver build 
+$ npx weaver build 
 ```
 ```sh [pnpm]
 $ pnpm weaver build

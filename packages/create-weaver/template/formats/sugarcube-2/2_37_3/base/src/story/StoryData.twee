@@ -1,7 +1,0 @@
-:: StoryData
-{
-	"ifid": "{{ifid}}",
-	"format": "SugarCube",
-	"format-version": "2.37.3"
-}
-
