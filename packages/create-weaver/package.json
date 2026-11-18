@@ -11,7 +11,8 @@
   "homepage": "https://github.com/greatsquare0/thy-weaver/tree/main/packages/create-weaver",
   "repository": {
     "type": "git",
-    "url": "https://github.com/greatsquare0/thy-weaver/tree/main/packages/create-weaver"
+    "url": "git+https://github.com/greatsquare0/thy-weaver.git",
+    "directory": "packages/create-weaver"
   },
   "bugs": "https://github.com/greatsquare0/thy-weaver/issues",
   "bin": {

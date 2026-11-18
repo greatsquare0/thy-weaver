@@ -5,8 +5,8 @@ lang: en-US
 
 # Desktop Executables
 
-::: warning Experimental
-`@thy-weaver/plugin-executable` is experimental and not released on npm yet. Its options may still change
+::: warning Beta
+`@thy-weaver/plugin-executable` is in beta, its options may still change between releases
 :::
 
 `@thy-weaver/plugin-executable` packages your game as a desktop app using [Neutralinojs](https://neutralino.js.org/): a small (~3 MB) native program that opens your game in the system's webview (WebView2 on Windows, WebKit on macOS and Linux).
@@ -17,7 +17,23 @@ lang: en-US
 
 ## Setup
 
-Once it's installed, add the plugin to your [config file](/reference/config-file#plugins):
+It needs `@thy-weaver/core` 1.1 or newer. Install the beta with your package manager:
+
+::: code-group
+
+```sh [npm]
+$ npm add -D @thy-weaver/plugin-executable@beta
+```
+```sh [pnpm]
+$ pnpm add -D @thy-weaver/plugin-executable@beta
+```
+```sh [bun]
+$ bun add -D @thy-weaver/plugin-executable@beta
+```
+
+:::
+
+Then add the plugin to your [config file](/reference/config-file#plugins):
 
 ```ts [thyweaver.config.ts]
 import { defineConfig } from "@thy-weaver/core";
