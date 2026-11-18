@@ -10,9 +10,25 @@ import type {
   PipelineResult,
 } from "./plugins/types.ts";
 import { colorizeEmiter, colorizeLabel, fancyLogFormater } from "./utils.ts";
+import { loadConfig } from "./config/config_handler.ts";
+import type { ThyWevearOptions } from "./config/config_types.ts";
 
-const compileStory = async (): Promise<string | undefined> => {
-  const tweego = await getTweego("string");
+/**
+ * `devServer.twineDebug` only applies to `weaver dev`, builds meant for
+ * players never ship in test mode
+ */
+export const useTwineTestMode = (
+  config: Pick<ThyWevearOptions, "devServer">,
+  mode: PipelineMode,
+) => mode === "dev" && config.devServer?.twineDebug === true;
+
+const compileStory = async (
+  mode: PipelineMode,
+): Promise<string | undefined> => {
+  const config = await loadConfig();
+  const tweego = await getTweego("string", {
+    testMode: useTwineTestMode(config, mode),
+  });
 
   const spinner = ora({
     prefixText: colorizeEmiter("TWEENODE"),
@@ -65,7 +81,7 @@ export const runPipeline = async (
 
     await runRolldownn(await manager.rolldownPlugins(mode));
 
-    const rawHtml = await compileStory();
+    const rawHtml = await compileStory(mode);
 
     if (rawHtml !== undefined) {
       html = await manager.transformStoryHtml(rawHtml, mode);

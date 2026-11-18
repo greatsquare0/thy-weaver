@@ -57,6 +57,57 @@ describe("weaver build", () => {
     expect(html).toMatch(/color:\s*#f0f/);
   });
 
+  it("copies fonts and additional assets, and compiles for the target", async () => {
+    project = await createProject();
+    await project.write("src/assets/fonts/game.woff2", "font data");
+    await project.write("extra/licenses/font.txt", "font license");
+    await project.write("extra/readme.txt", "read me");
+    await project.write(
+      "src/assets/app/styles/main.css",
+      ".a { user-select: none; }",
+    );
+    await project.edit("thyweaver.config.js", (content) =>
+      content
+        .replace("twineDebug: false", "twineDebug: true")
+        .replace(
+          "watcherDelay: 1000,",
+          [
+            "watcherDelay: 1000,",
+            '    compilationTarget: "safari 10",',
+            "    additionalAssets: [",
+            '      { input: "extra/licenses", output: "licenses" },',
+            '      { input: "extra/readme.txt", output: "readme.txt" },',
+            "    ],",
+          ].join("\n"),
+        ),
+    );
+
+    const html = await build(project);
+
+    expect(await project.read("dist/fonts/game.woff2")).toBe("font data");
+    expect(await project.read("dist/licenses/font.txt")).toBe("font license");
+    expect(await project.read("dist/readme.txt")).toBe("read me");
+    // Old Safari needs the prefix
+    expect(html).toContain("-webkit-user-select");
+    // twineDebug never applies to builds
+    expect(html).not.toMatch(/<tw-storydata[^>]*options="debug"/);
+  });
+
+  it("fails the build on a missing additional asset", async () => {
+    project = await createProject();
+    await project.edit("thyweaver.config.js", (content) =>
+      content.replace(
+        "watcherDelay: 1000,",
+        'watcherDelay: 1000,\n    additionalAssets: [{ input: "missing", output: "missing" }],',
+      ),
+    );
+
+    const result = await runWeaver(project.root, ["build"]);
+
+    expect(result.code).not.toBe(0);
+    expect(result.output).toContain("Additional asset not found");
+  });
+
   it("bundles imports, raw imports and vendor files", async () => {
     project = await createProject();
     await project.write(

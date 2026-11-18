@@ -1,12 +1,18 @@
 import type { Config as SWCOptions } from "@swc/core";
 import type { Plugin } from "../plugins/types.ts";
 
+/**
+ * A file or folder copied as-is into dist/ on build, and served at the same
+ * path by `weaver dev`
+ * @example { input: "extra/licenses", output: "licenses" }
+ */
 export interface AdditionalAsset {
   /**
-   * Can be a file or dir
+   * File or folder, relative to the project root. The build fails if it doesn't exist
    */
   input: string;
   /**
+   * Where it goes, relative to dist/ (`"."` is dist/ itself, for folders).
    * If input is a dir, the output needs to be one too, and vice versa
    */
   output: string;
@@ -19,16 +25,25 @@ export interface BundlerOptions {
    */
   watcherDelay: number;
   /**
-   * See https://browsersl.ist/ for valid targets, doesn't affect the story format source code, only yours
+   * Browserslist query your scripts (SWC) and styles (lightningcss) are compiled for,
+   * see https://browsersl.ist/. Doesn't affect the story format source code, only yours.
+   * `swc.env.targets`, if set, wins for scripts
    * @default 'defaults'
    */
   compilationTarget?: string;
+  /**
+   * Extra files or folders copied into dist/, e.g. licenses or a readme
+   */
   additionalAssets?: AdditionalAsset[];
   filesystem?: {
     projectFiles?: {
       entryPoint?: string;
       storyDir?: string;
       mediaDir?: string;
+      /**
+       * Copied to dist/fonts/ (and served at /fonts/ on dev), skipped if missing
+       * @default "src/assets/fonts/"
+       */
       fontsDir?: string;
       vendorFilesDir?: string;
       htmlHead?: string;
@@ -47,7 +62,9 @@ export interface DevServerOptions {
   restricToLocalhost: boolean;
   port: number;
   /**
-   * Enables Twine debug/test mode, some formats offer testing tools when enabled
+   * Compiles the story in Twine debug/test mode on `weaver dev`, some formats
+   * offer testing tools when enabled. Never applies to `weaver build`
+   * @default false
    */
   twineDebug: boolean;
 }

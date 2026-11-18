@@ -10,6 +10,7 @@ import { pathToFileURL } from "node:url";
 import type { ThyWevearOptions } from "./config_types.ts";
 import { deepmerge } from "deepmerge-ts";
 import { callHook, sortPlugins } from "../plugins/sort.ts";
+import { resolveDerivedOptions } from "./resolve_config.ts";
 
 function stripDefineConfig(content: string): string {
   const importRegex =
@@ -111,6 +112,8 @@ const applyPluginConfigHooks = async (
 
   // Plugins can't add or remove plugins through the config hook
   config.plugins = initial.plugins;
+
+  config = resolveDerivedOptions(config);
 
   for (const plugin of plugins) {
     const hook = plugin.configResolved;

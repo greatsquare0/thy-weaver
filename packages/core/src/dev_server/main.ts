@@ -5,6 +5,7 @@ import { join } from "node:path";
 import { devState, resolveToProjectRoot } from "../utils.ts";
 import { addStream, broadcast, removeStream } from "./streams.ts";
 import { getPluginManager } from "../plugins/manager.ts";
+import { findStaticAsset, resolveStaticMounts } from "../static_assets.ts";
 
 const app: H3 = new H3();
 
@@ -90,6 +91,28 @@ const startServer = async (): Promise<ReturnType<typeof serve>> => {
       },
     });
   });
+
+  // Fonts and `additionalAssets`, served where they will be in dist/
+  const mounts = resolveStaticMounts(config);
+  if (mounts.length > 0) {
+    app.use(async (event, next) => {
+      if (event.req.method !== "GET" && event.req.method !== "HEAD") {
+        return next();
+      }
+
+      const file = await findStaticAsset(event.url.pathname, mounts);
+      if (!file) return next();
+
+      return serveStatic(event, {
+        indexNames: undefined,
+        getContents: () => readFile(file),
+        getMeta: async () => {
+          const stats = await stat(file);
+          return { size: stats.size, mtime: stats.mtimeMs };
+        },
+      });
+    });
+  }
 
   app.get("/events/", async (event) => {
     const eventStream = createEventStream(event);

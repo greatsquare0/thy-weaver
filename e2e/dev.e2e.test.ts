@@ -13,6 +13,16 @@ let server: DevServer;
 beforeAll(async () => {
   project = await createProject();
   await project.write("src/assets/media/cover.txt", "media file");
+  await project.write("src/assets/fonts/game.woff2", "font data");
+  await project.write("extra/readme.txt", "read me");
+  await project.edit("thyweaver.config.js", (content) =>
+    content
+      .replace("twineDebug: false", "twineDebug: true")
+      .replace(
+        "watcherDelay: 1000,",
+        'watcherDelay: 1000,\n    additionalAssets: [{ input: "extra/readme.txt", output: "docs/readme.txt" }],',
+      ),
+  );
   server = await startDevServer(project);
 });
 
@@ -81,6 +91,23 @@ describe("weaver dev", () => {
 
     expect(response.status).toBe(200);
     expect(await response.text()).toBe("media file");
+  });
+
+  it("serves fonts and additional assets where they go in dist/", async () => {
+    const font = await fetch(`${server.url}/fonts/game.woff2`);
+    expect(font.status).toBe(200);
+    expect(await font.text()).toBe("font data");
+
+    const readme = await fetch(`${server.url}/docs/readme.txt`);
+    expect(readme.status).toBe(200);
+    expect(await readme.text()).toBe("read me");
+
+    expect((await fetch(`${server.url}/fonts/missing.woff2`)).status).toBe(404);
+  });
+
+  it("compiles the story in Twine test mode with twineDebug", async () => {
+    const html = await (await fetch(`${server.url}/`)).text();
+    expect(html).toMatch(/<tw-storydata[^>]*options="debug"/);
   });
 
   it("rebuilds and notifies the page when a file changes", async () => {

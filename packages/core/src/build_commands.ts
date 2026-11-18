@@ -13,6 +13,7 @@ import pico from "picocolors";
 import { copy, remove } from "fs-extra/esm";
 import { resolve } from "node:path";
 import { existsSync } from "node:fs";
+import { copyStaticMounts, resolveStaticMounts } from "./static_assets.ts";
 
 export const handleTweegoSetup = async () => {
   const spinner = ora({
@@ -105,10 +106,40 @@ export const moveFiles = async () => {
       ` ${colorizeLabel("ERROR")} Failed to copy media files:\n${error}\n`,
     );
   }
+
+  const mounts = resolveStaticMounts(config);
+  if (mounts.length === 0) return;
+
+  const startStamp = Date.now();
+  spinner.start("Copying fonts and additional assets...");
+  try {
+    const copied = await copyStaticMounts(
+      mounts,
+      resolveToProjectRoot(filesystemConfig!.dist!),
+    );
+    spinner.succeed(
+      `${copied.length} asset ${copied.length === 1 ? "entry" : "entries"} copied in ${pico.yellow(`${Date.now() - startStamp}ms`)}`,
+    );
+  } catch (error) {
+    spinner.fail(
+      ` ${colorizeLabel("ERROR")} Failed to copy additional assets:\n${error}\n`,
+    );
+    // Explicitly configured assets are part of the game, fail the build
+    throw error;
+  }
 };
+
+export interface GetTweegoOptions {
+  /**
+   * Compile in Twine test/debug mode (Tweego's `-t`)
+   * @default false
+   */
+  testMode?: boolean;
+}
 
 export const getTweego = async (
   mode: "file" | "string",
+  { testMode = false }: GetTweegoOptions = {},
 ): Promise<ReturnType<typeof tweenode>> => {
   const { bundler } = await loadConfig();
   const { filesystem } = bundler;
@@ -124,6 +155,7 @@ export const getTweego = async (
           filesystem!.stagingDir + "/vendor.bundle.css",
           filesystem!.stagingDir + "/vendor.bundle.js",
         ],
+        useTwineTestMode: testMode,
       },
       output: {
         mode: mode,
